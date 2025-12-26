@@ -1,22 +1,33 @@
 <template>
   <div class="providerSelect">
     <SelectRoot>
-      <SelectTrigger>
+      <SelectTrigger
+        class="flex w-full justify-between border items-center py-2 px-3
+          rounded-md shadow-md data-[placeholder]:text-gray-400"
+      >
         <SelectValue placeholder="请选择模型" />
-        <SelectIcon />
+        <Icon icon="radix-icons:chevron-down" class="w-4 h-4"></Icon>
       </SelectTrigger>
-
       <SelectPortal>
-        <SelectContent>
+        <SelectContent class="bg-white rounded-md shadow-md z-[100] border">
           <SelectViewport>
-            <SelectItem value="GPT-3.5-turbo">
-              <SelectItemText>GPT-3.5-turbo</SelectItemText>
-              <SelectItemIndicator />
-            </SelectItem>
-            <SelectItem value="doubao">
-              <SelectItemText>doubao</SelectItemText>
-              <SelectItemIndicator />
-            </SelectItem>
+            <div v-for="value in providers">
+              <SelectLabel value="value.id">
+                <img :src="value.avatar" alt="" class="w-4 h-4 rounded-full" />
+                {{ value.name }}</SelectLabel
+              >
+              <SelectGroup>
+                <SelectItem
+                  v-for="(model, index) in value.models"
+                  :key="index"
+                  :value="model"
+                >
+                  <SelectItemText>{{ model }}</SelectItemText>
+                  <SelectItemIndicator />
+                </SelectItem>
+              </SelectGroup>
+            </div>
+
             <SelectSeparator />
           </SelectViewport>
         </SelectContent>
@@ -25,6 +36,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { Icon } from '@iconify/vue';
 import {
   SelectContent,
   SelectGroup,
@@ -40,5 +52,9 @@ import {
   SelectTrigger,
   SelectValue,
   SelectViewport,
-} from 'radix-vue'
+} from 'radix-vue';
+import { ProviderProps } from '../types';
+defineProps<{
+  providers: ProviderProps[];
+}>();
 </script>

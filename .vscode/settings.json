@@ -1,4 +1,9 @@
 {
+  "prettier.enable": true,
+  "prettier.useLocalConfig": true, // 确保使用项目本地配置
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },

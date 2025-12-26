@@ -1,31 +1,43 @@
 <template>
   <div class="flex items-center justify-between h-screen">
-    <div class="bg-gray-200 w-[300px] h-full border-r border-gray-300 hover:bg-gray-300">
-      <div class="h-[90%] overflow-y-auto"><ConversationList :items="items" /></div>
+    <div
+      class="bg-gray-200 w-[300px] h-full border-r border-gray-300
+        hover:bg-gray-300"
+    >
+      <div class="h-[90%] overflow-y-auto">
+        <ConversationList :items="items" />
+      </div>
       <div class="h-[10%] flex justify-between items-center p-2 gap-2">
         <button
-          class="flex justify-center items-center bg-blue-500 text-white px-5 py-2 rounded-md hover:bg-blue-700 hover:text-white"
+          class="flex justify-center items-center bg-blue-500 text-white px-5
+            py-2 rounded-md hover:bg-blue-700 hover:text-white"
         >
           <Icon icon="radix-icons:chat-bubble" class="mr-2"></Icon>
           新建聊天
         </button>
         <button
-          class="flex justify-center items-center bg-green-200 text-green-700 text-white rounded-md px-5 py-2 border-green-700 border hover:bg-green-700 hover:text-white"
+          class="flex justify-center items-center bg-green-500 text-green-700
+            text-white rounded-md px-5 py-2 border-green-700 border
+            hover:bg-green-700 hover:text-white"
         >
           <Icon icon="radix-icons:gear" class="mr-2"></Icon>
           应用设置
         </button>
       </div>
     </div>
-    <div class="h-full flex-1"><ProviderSelect /></div>
+    <div class="h-full flex-1 flex items-center justify-center">
+      <div class="w-[80%] mx-auto">
+        <ProviderSelect :providers="providers" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
-import { ConversationProps } from './types'
-import ConversationList from './components/ConversationList.vue'
-import ProviderSelect from './components/ProviderSelect.vue'
+import { Icon } from '@iconify/vue';
+import { ConversationProps, ProviderProps } from './types';
+import ConversationList from './components/ConversationList.vue';
+import ProviderSelect from './components/ProviderSelect.vue';
 const items: ConversationProps[] = [
   {
     id: '1',
@@ -139,6 +151,45 @@ const items: ConversationProps[] = [
     updatedAt: '2023-08-01',
     providerId: 1,
   },
-]
-console.log('👋 This message is being logged by "App.vue", included via Vite')
+];
+
+const providers: ProviderProps[] = [
+  {
+    id: 1,
+    name: 'OpenAI',
+    desc: 'OpenAI 是一个 AI 研究和开发公司，致力于推动 AI 技术的发展。',
+    models: ['GPT-3.5-turbo', 'GPT-4'],
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+    avatar: 'https://openai.com/favicon.ico',
+  },
+  {
+    id: 2,
+    name: '字节',
+    desc: '字节跳动是一个中国的科技公司，专注于移动应用和互联网服务。',
+    models: ['doubao', 'doubao-pro'],
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+    avatar: 'https://www.baidu.com/favicon.ico',
+  },
+  {
+    id: 3,
+    name: '文心一言',
+    desc: '文心一言是一个基于大模型的智能问答系统，由字节跳动开发。',
+    models: ['ernie-3.5', 'ernie-4.0'],
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+    avatar: 'https://www.baidu.com/favicon.ico',
+  },
+  {
+    id: 4,
+    name: '通义千问',
+    desc: '通义千问是一个基于大模型的智能问答系统，由字节跳动开发。',
+    models: ['qwen-1.5', 'qwen-2.0'],
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+    avatar: 'https://www.baidu.com/favicon.ico',
+  },
+];
+console.log('👋 This message is being logged by "App.vue", included via Vite');
 </script>
