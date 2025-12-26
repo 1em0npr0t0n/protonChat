@@ -26,8 +26,18 @@
       </div>
     </div>
     <div class="h-full flex-1 flex items-center justify-center">
-      <div class="w-[80%] mx-auto">
-        <ProviderSelect :providers="providers" />
+      <div class="w-[80%] h-full mx-auto grid grid-cols-1 grid-rows-5 gap-4">
+        {{ message }}
+        <ProviderSelect
+          class="row-start-3"
+          :providers="providers"
+          v-model="selectedModel"
+        />
+        <MassageInput
+          class="row-start-5"
+          v-model="message"
+          @onClick="onClick"
+        />
       </div>
     </div>
   </div>
@@ -38,6 +48,13 @@ import { Icon } from '@iconify/vue';
 import { ConversationProps, ProviderProps } from './types';
 import ConversationList from './components/ConversationList.vue';
 import ProviderSelect from './components/ProviderSelect.vue';
+import { ref } from 'vue';
+import MassageInput from './components/MassageInput.vue';
+const selectedModel = ref('');
+const message = ref('');
+function onClick() {
+  console.log(message.value);
+}
 const items: ConversationProps[] = [
   {
     id: '1',
