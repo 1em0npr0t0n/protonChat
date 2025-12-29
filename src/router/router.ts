@@ -5,7 +5,7 @@ export const router = createRouter({
     { path: '/', component: () => import('../views/Home.vue') },
 
     {
-      path: '/conversation',
+      path: '/conversation/:id',
       component: () => import('../views/Conversation.vue'),
     },
     { path: '/setting', component: () => import('../views/Settings.vue') },

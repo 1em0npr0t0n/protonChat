@@ -1,7 +1,7 @@
 <template>
   <div class="w-[80%] h-[85%] mx-auto grid grid-cols-1 grid-rows-5 gap-4 overflow-y-auto">
     <h1 class="text-3xl font-bold underline">Conversation</h1>
-    <MessageList :messages="messages" />
+    <MessageList :messages="ms.list" />
   </div>
   <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
     <MassageInput class="w-full" v-model="message" @onClick="onClick" />
@@ -12,10 +12,15 @@ import { MessageProps } from '../types';
 import MessageList from '../components/MessageList.vue';
 import MassageInput from '../components/MassageInput.vue';
 import { ref } from 'vue';
+import { reactive } from 'vue';
+import { useRoute } from 'vue-router';
+const ms = reactive({ list: Array<MessageProps>() });
 const message = ref('');
 function onClick() {
   console.log(message.value);
 }
+const route = useRoute();
+const conversationId = Number(route.params.id);
 
 const messages: MessageProps[] = [
   {
@@ -73,5 +78,61 @@ const messages: MessageProps[] = [
     createdAt: '2023-08-01',
     updatedAt: '2023-08-01',
   },
+  {
+    id: 1,
+    content: '你好2',
+    type: 'question',
+    conterstionid: 2,
+    statue: 'finished',
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+  },
+  {
+    id: 2,
+    content: '你好，我是 Proton Chat',
+    type: 'answer',
+    conterstionid: 2,
+    statue: 'finished',
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+  },
+  {
+    id: 3,
+    content: '我想问你一些问题',
+    type: 'question',
+    conterstionid: 2,
+    statue: 'finished',
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+  },
+  {
+    id: 4,
+    content:
+      'OK，我可以回答你的问题，比如炸鸡好吃吗？，还有其他的问题吗？各种需求我都可以满足，当然我只会说话并不会其他的操作',
+    type: 'answer',
+    conterstionid: 2,
+    statue: 'finished',
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+  },
+  {
+    id: 5,
+    content: '炸鸡好吃吗？2',
+    type: 'question',
+    conterstionid: 2,
+    statue: 'finished',
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+  },
+  {
+    id: 6,
+    content: '我并没有吃过炸鸡，我只吃过其他的食物',
+    type: 'answer',
+    conterstionid: 2,
+    statue: 'loading',
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+  },
 ];
+ms.list = messages.filter((item) => item.conterstionid === conversationId);
 </script>
