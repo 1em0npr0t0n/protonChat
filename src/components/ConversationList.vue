@@ -6,7 +6,7 @@
       v-for="item in items"
       :key="item.id"
     >
-      <a href="">
+      <RouterLink to="/conversation">
         <div
           class="flex justify-between items-center text-sm leading-6
             text-gray-500"
@@ -17,13 +17,13 @@
         <div class="text-sm font-medium text-gray-900 truncate">
           {{ item.title }}
         </div>
-      </a>
+      </RouterLink>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ConversationProps } from '../types'
+import { ConversationProps } from '../types';
 defineProps<{
-  items: ConversationProps[]
-}>()
+  items: ConversationProps[];
+}>();
 </script>

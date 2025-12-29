@@ -16,3 +16,13 @@ export interface ProviderProps {
   updatedAt: string;
   models: string[];
 }
+export type MessageStatus = 'loading' | 'streaming' | 'finished';
+export interface MessageProps {
+  id: number;
+  content: string;
+  type: 'question' | 'answer';
+  conterstionid: number;
+  statue?: MessageStatus;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -8,15 +8,16 @@
     />
     <button
       @click="send"
-      class="bg-blue-500 text-white p-2 rounded absolute right-0"
+      class="bg-cyan-500 text-white py-1 px-2 mr-1 rounded absolute right-0 flex items-center"
     >
+      <Icon icon="radix-icons:paper-plane" class="mr-2" width="15" height="15" />
       发送
     </button>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-
+import { Icon } from '@iconify/vue';
 const message = defineModel<string>();
 const emit = defineEmits();
 function send() {
