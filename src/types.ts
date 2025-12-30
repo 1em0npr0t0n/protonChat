@@ -26,3 +26,8 @@ export interface MessageProps {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ChatMessageProps {
+  role: 'user' | 'assistant';
+  content: string;
+}

@@ -1,9 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import OpenAI from 'openai';
-import 'dotenv/config';
-import fs from 'fs/promises';
+import fs from 'fs';
+import { openai, chatFile } from './services/openai';
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
@@ -28,14 +27,16 @@ const createWindow = async () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
-  const openai = new OpenAI({
-    baseURL: process.env.ALI_API_URL,
-    apiKey: process.env.ALI_API_KEY,
-  });
-  const imageBuffer = await fs.readFile('src/public/dog.jpg');
-  const base64Image = Buffer.from(imageBuffer).toString('base64');
-  console.log(base64Image);
 
+  const fileObj = await openai.files.create({
+    file: fs.createReadStream('src/public/htyc.docx'),
+    purpose: 'file-extract' as any,
+  });
+  console.log(JSON.stringify(fileObj));
+  const stream = await chatFile(fileObj.id);
+  console.log(JSON.stringify(stream));
+
+  /*
   let reasoningContent = '';
   let answerContent = '';
   let isAnswering = false;
@@ -89,27 +90,7 @@ const createWindow = async () => {
   } catch (error) {
     console.error('Error:', error);
   }
-
-  // const response = await openai.chat.completions.create({
-  //   model: 'ernie-speed-128k',
-  //   messages: [
-  //     {
-  //       role: 'user',
-  //       content: '明天天气怎么样？',
-  //     },
-  //   ],
-  //   stream: true,
-  //   temperature: 0.95,
-  //   top_p: 0.7,
-  //   //"penalty_score": 1
-  // });
-  // console.log(response.choices[0].message.content);
-  // console.log(JSON.stringify(response));
-  // for await (const part of response) {
-  //   const delta = part.choices[0].delta.content;
-
-  //   console.log(JSON.stringify(part));
-  // }
+*/
 };
 
 // This method will be called when Electron has finished
