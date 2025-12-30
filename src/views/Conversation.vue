@@ -1,6 +1,12 @@
 <template>
-  <div class="w-[80%] h-[85%] mx-auto grid grid-cols-1 grid-rows-5 gap-4 overflow-y-auto">
-    <h1 class="text-3xl font-bold underline">Conversation</h1>
+  <div
+    v-if="conversation"
+    class="h-[10%] border-b border-gray-300 flex items-center justify-between px-[10%]"
+  >
+    <h3 class="text-sm font-bold underline inline-block">{{ conversation.title }}</h3>
+    <span class="text-sm text-gray-500">{{ conversation.selectedModel }}</span>
+  </div>
+  <div class="w-[80%] h-[75%] mx-auto grid grid-cols-1 grid-rows-5 gap-4 overflow-y-auto">
     <MessageList :messages="ms.list" />
   </div>
   <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
@@ -8,131 +14,31 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { MessageProps } from '../types';
+import { MessageProps, ConversationProps } from '../types';
 import MessageList from '../components/MessageList.vue';
 import MassageInput from '../components/MassageInput.vue';
-import { ref } from 'vue';
-import { reactive } from 'vue';
+import { ref, watch, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-const ms = reactive({ list: Array<MessageProps>() });
+import { messages, conversations } from '../testData';
+const ms = reactive<{ list: MessageProps[] }>({ list: [] });
 const message = ref('');
+const conversation = ref<ConversationProps>();
+
 function onClick() {
-  console.log(message.value);
+  console.log(ms);
 }
 const route = useRoute();
-const conversationId = Number(route.params.id);
+let conversationId = Number(route.params.id);
+ms.list = messages.filter((item) => item.conversationId === conversationId);
 
-const messages: MessageProps[] = [
-  {
-    id: 1,
-    content: '你好',
-    type: 'question',
-    conterstionid: 1,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 2,
-    content: '你好，我是 Proton Chat',
-    type: 'answer',
-    conterstionid: 1,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 3,
-    content: '我想问你一些问题',
-    type: 'question',
-    conterstionid: 1,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 4,
-    content:
-      'OK，我可以回答你的问题，比如炸鸡好吃吗？，还有其他的问题吗？各种需求我都可以满足，当然我只会说话并不会其他的操作',
-    type: 'answer',
-    conterstionid: 1,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 5,
-    content: '炸鸡好吃吗？',
-    type: 'question',
-    conterstionid: 1,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 6,
-    content: '我并没有吃过炸鸡，我只吃过其他的食物',
-    type: 'answer',
-    conterstionid: 1,
-    statue: 'loading',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 1,
-    content: '你好2',
-    type: 'question',
-    conterstionid: 2,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 2,
-    content: '你好，我是 Proton Chat',
-    type: 'answer',
-    conterstionid: 2,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 3,
-    content: '我想问你一些问题',
-    type: 'question',
-    conterstionid: 2,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 4,
-    content:
-      'OK，我可以回答你的问题，比如炸鸡好吃吗？，还有其他的问题吗？各种需求我都可以满足，当然我只会说话并不会其他的操作',
-    type: 'answer',
-    conterstionid: 2,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 5,
-    content: '炸鸡好吃吗？2',
-    type: 'question',
-    conterstionid: 2,
-    statue: 'finished',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-  {
-    id: 6,
-    content: '我并没有吃过炸鸡，我只吃过其他的食物',
-    type: 'answer',
-    conterstionid: 2,
-    statue: 'loading',
-    createdAt: '2023-08-01',
-    updatedAt: '2023-08-01',
-  },
-];
-ms.list = messages.filter((item) => item.conterstionid === conversationId);
+conversation.value = conversations.find((item) => Number(item.id) === conversationId);
+watch(
+  () => route.params.id,
+  (newVal: string, oldVal: string) => {
+    conversationId = Number(route.params.id);
+    ms.list = messages.filter((item) => item.conversationId === conversationId);
+
+    conversation.value = conversations.find((item) => Number(item.id) === conversationId);
+  }
+);
 </script>

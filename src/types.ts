@@ -21,7 +21,7 @@ export interface MessageProps {
   id: number;
   content: string;
   type: 'question' | 'answer';
-  conterstionid: number;
+  conversationId: number;
   statue?: MessageStatus;
   createdAt: string;
   updatedAt: string;

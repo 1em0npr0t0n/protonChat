@@ -6,18 +6,28 @@
       v-model="message"
       placeholder="聊点什么呢？"
     />
-    <button
+    <!-- <button
       @click="send"
       class="bg-cyan-500 text-white py-1 px-2 mr-1 rounded absolute right-0 flex items-center"
     >
       <Icon icon="radix-icons:paper-plane" class="mr-2" width="15" height="15" />
       发送
-    </button>
+    </button> -->
+    <CustomButton
+      class="absolute right-0 mr-1"
+      color="cyan"
+      plain
+      size="small"
+      :icon="'radix-icons:paper-plane'"
+      @click="send"
+    >
+      发送
+    </CustomButton>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Icon } from '@iconify/vue';
+import CustomButton from '../components/CustomButton.vue';
 const message = defineModel<string>();
 const emit = defineEmits();
 function send() {
