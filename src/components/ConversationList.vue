@@ -8,7 +8,9 @@
       <a @click="goToConversation(parseInt(item.id))" :to="'/conversation/' + item.id">
         <div class="flex justify-between items-center text-sm leading-6 text-gray-500">
           <span class="text-xs text-gray-400">{{ item.selectedModel }}</span
-          ><span class="text-xs text-gray-400">{{ item.createdAt }}</span>
+          ><span class="text-xs text-gray-400">{{
+            dayjs(item.createdAt).format('YYYY-MM-DD')
+          }}</span>
         </div>
         <div class="text-sm font-medium text-gray-900 truncate">
           {{ item.title }}
@@ -18,6 +20,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import dayjs from 'dayjs';
 import { ConversationProps } from '../types';
 defineProps<{
   items: ConversationProps[];

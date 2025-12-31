@@ -31,3 +31,10 @@ export interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
 }
+
+export interface CreateChatProps {
+  content: string;
+  providerName: string;
+  selectedModel: string;
+  messageId: number;
+}
