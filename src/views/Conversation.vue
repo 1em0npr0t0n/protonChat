@@ -23,11 +23,12 @@ import { messages, conversations } from '../testData';
 const ms = reactive<{ list: MessageProps[] }>({ list: [] });
 const message = ref('');
 const conversation = ref<ConversationProps>();
+const route = useRoute();
 
 function onClick() {
   console.log(ms);
 }
-const route = useRoute();
+
 let conversationId = Number(route.params.id);
 ms.list = messages.filter((item) => item.conversationId === conversationId);
 

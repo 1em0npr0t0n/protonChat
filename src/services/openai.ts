@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import OpenAI from 'openai';
+import fs from 'fs';
 import { ChatMessageProps } from '../types';
 export const openai = new OpenAI({
   baseURL: process.env.ALI_API_URL,
@@ -61,7 +62,19 @@ export async function chatMessage(props: ChatMessageProps) {
   //   console.log(JSON.stringify(part));
   // }
 }
-export async function chatFile(fileId: string) {
+
+export async function chatFile(fileDir: string) {
+  // 'src/public/htyc.docx'
+  const fileObj = await openai.files.create({
+    file: fs.createReadStream(fileDir),
+    purpose: 'file-extract' as any,
+  });
+  //console.log(JSON.stringify(fileObj));
+  const stream = await chatMessageFile(fileObj.id);
+
+  return stream;
+}
+export async function chatMessageFile(fileId: string) {
   const stream = await openai.chat.completions.create({
     model: 'qwen-long',
     messages: [

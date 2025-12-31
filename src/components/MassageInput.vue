@@ -19,7 +19,7 @@
       plain
       size="small"
       :icon="'radix-icons:paper-plane'"
-      @click="send"
+      @click="onCreate"
     >
       发送
     </CustomButton>
@@ -29,8 +29,12 @@
 import { ref } from 'vue';
 import CustomButton from '../components/CustomButton.vue';
 const message = defineModel<string>();
-const emit = defineEmits();
-function send() {
-  emit('onClick');
-}
+const emit = defineEmits<{
+  (e: 'create', message: string): void;
+}>();
+const onCreate = () => {
+  if (message.value && message.value.trim() !== '') {
+    emit('create', message.value);
+  }
+};
 </script>

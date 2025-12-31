@@ -45,6 +45,7 @@
     "vite-plugin-eslint2": "^5.0.4"
   },
   "dependencies": {
+    "dexie": "^4.2.1",
     "dotenv": "^17.2.3",
     "electron-squirrel-startup": "^1.0.1",
     "openai": "^6.15.0",

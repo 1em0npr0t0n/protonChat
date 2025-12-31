@@ -94,7 +94,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 1,
+    id: 7,
     content: '你好2',
     type: 'question',
     conversationId: 2,
@@ -103,7 +103,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 2,
+    id: 8,
     content: '你好，我是 Proton Chat',
     type: 'answer',
     conversationId: 2,
@@ -112,7 +112,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 3,
+    id: 9,
     content: '我想问你一些问题',
     type: 'question',
     conversationId: 2,
@@ -121,7 +121,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 4,
+    id: 10,
     content:
       'OK，我可以回答你的问题，比如炸鸡好吃吗？，还有其他的问题吗？各种需求我都可以满足，当然我只会说话并不会其他的操作',
     type: 'answer',
@@ -131,7 +131,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 5,
+    id: 11,
     content: '炸鸡好吃吗？2',
     type: 'question',
     conversationId: 2,
@@ -140,7 +140,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 6,
+    id: 12,
     content: '我并没有吃过炸鸡，我只吃过其他的食物',
     type: 'answer',
     conversationId: 2,
@@ -149,7 +149,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 5,
+    id: 13,
     content: 'fdf ',
     type: 'question',
     conversationId: 3,
@@ -158,7 +158,7 @@ export const messages: MessageProps[] = [
     updatedAt: '2023-08-01',
   },
   {
-    id: 6,
+    id: 14,
     content: 'adfdsfxcvd',
     type: 'answer',
     conversationId: 3,
