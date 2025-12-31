@@ -2,12 +2,12 @@ import { createRouter, createMemoryHistory } from 'vue-router';
 export const router = createRouter({
   history: createMemoryHistory(),
   routes: [
-    { path: '/', component: () => import('../views/Home.vue') },
+    { path: '/', component: () => import('../views/HomeView.vue') },
 
     {
       path: '/conversation/:id',
-      component: () => import('../views/Conversation.vue'),
+      component: () => import('../views/ConversationView.vue'),
     },
-    { path: '/setting', component: () => import('../views/Settings.vue') },
+    { path: '/setting', component: () => import('../views/SettingsView.vue') },
   ],
 });

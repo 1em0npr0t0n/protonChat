@@ -1,11 +1,11 @@
 <template>
   <div class="h-full flex-1">
     <div
-      class="item border-gray-300 hover:bg-gray-200 border-t cursor-pointer bg-white p-2"
       v-for="item in items"
       :key="item.id"
+      class="item border-gray-300 hover:bg-gray-200 border-t cursor-pointer bg-white p-2"
     >
-      <a @click="goToConversation(parseInt(item.id))" :to="'/conversation/' + item.id">
+      <a :to="'/conversation/' + item.id" @click="goToConversation(parseInt(item.id))">
         <div class="flex justify-between items-center text-sm leading-6 text-gray-500">
           <span class="text-xs text-gray-400">{{ item.selectedModel }}</span
           ><span class="text-xs text-gray-400">{{

@@ -1,6 +1,6 @@
 <template>
   <div class="w-[80%] h-[85%] mx-auto grid grid-cols-1 grid-rows-5 gap-4">
-    <ProviderSelect class="row-start-3" :providers="providers" v-model="currentConversation" />
+    <ProviderSelect v-model="currentConversation" class="row-start-3" :providers="providers" />
   </div>
   <div class="w-[80%] h-[15%] mx-auto flex justify-center items-center">
     <MassageInput class="w-full" @create="createConversation" />

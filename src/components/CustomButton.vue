@@ -8,7 +8,7 @@
   >
     <!-- <Icon icon="radix-icons:chat-bubble" class="mr-2"></Icon>
     新建聊天 -->
-    <Icon :icon="iconWithLoading" class="mr-2" v-if="iconWithLoading" />
+    <Icon v-if="iconWithLoading" :icon="iconWithLoading" class="mr-2" />
     <slot></slot>
   </button>
 </template>
@@ -19,6 +19,7 @@ export type ButtonType = 'primary' | 'secondary' | 'danger' | 'success' | 'info'
 export type ButtonSize = 'small' | 'medium' | 'large';
 export type ButtonColor = 'cyan' | 'pink';
 export type ButtonPlain = { plain: string; normal: string };
+
 export interface CustomButtonProps {
   size?: ButtonSize;
   color?: ButtonColor;
@@ -30,7 +31,11 @@ export interface CustomButtonProps {
 defineOptions({
   name: 'CustomButton',
 });
-const props = withDefaults(defineProps<CustomButtonProps>(), { color: 'cyan' });
+const props = withDefaults(defineProps<CustomButtonProps>(), {
+  color: 'cyan',
+  size: 'medium',
+  icon: '',
+});
 const colorVariants: Record<ButtonColor, { plain: string; normal: string }> = {
   cyan: {
     plain: 'bg-cyan-100 hover:bg-cyan-700 border border-cyan-700 hover:text-white',

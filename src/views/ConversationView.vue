@@ -10,7 +10,7 @@
     <MessageList :messages="ms.list" />
   </div>
   <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
-    <MassageInput class="w-full" v-model="message" @onClick="onClick" />
+    <MassageInput v-model="message" class="w-full" @on-click="onClick" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -28,6 +28,7 @@ const route = useRoute();
 let conversationId = Number(route.params.id as string);
 let lastQuestion = '';
 const initMessageId = Number(route.query.init as string);
+
 const creatingInitMessage = async () => {
   const createdData: Omit<MessageProps, 'id'> = {
     conversationId,
@@ -39,7 +40,7 @@ const creatingInitMessage = async () => {
   };
   const newMessageId = await db.messages.add(createdData);
   ms.list.push({ id: newMessageId, ...createdData });
-  if (conversation) {
+  if (conversation.value) {
     const provider = await db.providers.where({ id: conversation.value?.providerId }).first();
     if (provider) {
       await window.electronAPI.startChat({
@@ -59,7 +60,8 @@ ms.list = messages.filter((item) => item.conversationId === conversationId);
 conversation.value = conversations.find((item) => Number(item.id) === conversationId);
 watch(
   () => route.params.id,
-  async (newVal: string, oldVal: string) => {
+  async (newVal: string) => {
+    //, oldVal: string
     conversationId = Number(newVal);
     conversation.value = await db.conversations.where({ id: conversationId }).first();
     ms.list = await db.messages.where({ conversationId }).toArray();

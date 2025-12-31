@@ -4,5 +4,5 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { CreateChatProps } from './types';
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  startChat: (data: CreateChatProps) => ipcRenderer.send('startChat', data),
+  startChat: (data: CreateChatProps) => ipcRenderer.send('start-chat', data),
 });

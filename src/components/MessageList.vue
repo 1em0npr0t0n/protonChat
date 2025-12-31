@@ -1,6 +1,6 @@
 <template>
   <div class="message-list">
-    <div class="message-item mb-3" v-for="message in messages" :key="message.id">
+    <div v-for="message in messages" :key="message.id" class="message-item mb-3">
       <div class="flex" :class="{ 'justify-end': message.type === 'question' }">
         <div>
           <div
@@ -10,14 +10,14 @@
             {{ dayjs(message.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
           </div>
           <div
-            class="message-content bg-cyan-500 text-white p-2 rounded-lg"
             v-if="message.type === 'question'"
+            class="message-content bg-cyan-500 text-white p-2 rounded-lg"
           >
             {{ message.content }}
           </div>
           <div
-            class="message-content bg-gray-200 text-gray-800 p-2 rounded-lg"
             v-if="message.type === 'answer'"
+            class="message-content bg-gray-200 text-gray-800 p-2 rounded-lg"
           >
             <template v-if="message.statue === 'loading'">
               <Icon icon="eos-icons:three-dots-loading" />
@@ -34,6 +34,6 @@
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
 import dayjs from 'dayjs';
-import { MessageProps } from 'src/types';
+import { MessageProps } from '../types';
 defineProps<{ messages: MessageProps[] }>();
 </script>

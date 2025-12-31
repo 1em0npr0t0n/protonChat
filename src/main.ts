@@ -1,7 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-
+import { CreateChatProps } from './types';
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
@@ -15,6 +15,11 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+  });
+
+  //
+  ipcMain.on('start-chat', (event, args: CreateChatProps) => {
+    console.log(args);
   });
 
   // and load the index.html of the app.

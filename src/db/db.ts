@@ -1,4 +1,4 @@
-import Dexie, { EntityTable } from 'dexie';
+import { Dexie, EntityTable } from 'dexie';
 import { providers } from '../testData';
 import { ProviderProps, MessageProps, ConversationProps } from '../types';
 
