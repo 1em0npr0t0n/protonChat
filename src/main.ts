@@ -1,7 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { CreateChatProps } from './types';
+import { CreateChatProps, UpdateStreamData } from './types';
+import { BaiduOpenAI } from './services/baidu';
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
@@ -18,8 +20,31 @@ const createWindow = async () => {
   });
 
   //
-  ipcMain.on('start-chat', (event, args: CreateChatProps) => {
+  ipcMain.on('start-chat', async (event, args: CreateChatProps) => {
     console.log(args);
+    const { providerName, content, selectedModel, messageId } = args;
+    if (providerName === 'ernie') {
+      const ernie = new BaiduOpenAI();
+      const stream = await ernie.chatMessage({
+        role: 'user',
+        content,
+        selectedModel,
+      });
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0].delta.content;
+        const isFinished = chunk.choices[0].finish_reason === 'stop';
+        if (delta) {
+          const returnData: UpdateStreamData = {
+            messageId,
+            data: {
+              isFinished,
+              delta,
+            },
+          };
+          mainWindow.webContents.send('update-message', returnData);
+        }
+      }
+    }
   });
 
   // and load the index.html of the app.

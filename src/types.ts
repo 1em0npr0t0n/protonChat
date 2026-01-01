@@ -30,6 +30,7 @@ export interface MessageProps {
 export interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
+  selectedModel: string;
 }
 
 export interface CreateChatProps {
@@ -38,3 +39,8 @@ export interface CreateChatProps {
   selectedModel: string;
   messageId: number;
 }
+export interface UpdateStreamData {
+  messageId: number;
+  data: { isFinished: boolean; delta: string };
+}
+export type OnUpdateMessage = (data: UpdateStreamData) => void;

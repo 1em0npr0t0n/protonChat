@@ -39,29 +39,14 @@ export async function chatImageDescription(props: ChatMessageProps, imageBuffer:
   //   }
   return stream;
 }
-export async function chatMessage(props: ChatMessageProps) {
-  const stream = await openai.chat.completions.create({
-    model: 'ernie-speed-128k',
-    messages: [
-      {
-        role: props.role,
-        content: props.content,
-      },
-    ],
-    stream: true,
-    temperature: 0.95,
-    top_p: 0.7,
-    //"penalty_score": 1
-  });
-  return stream;
-  // console.log(response.choices[0].message.content);
-  // console.log(JSON.stringify(response));
-  // for await (const part of response) {
-  //   const delta = part.choices[0].delta.content;
 
-  //   console.log(JSON.stringify(part));
-  // }
-}
+// console.log(response.choices[0].message.content);
+// console.log(JSON.stringify(response));
+// for await (const part of response) {
+//   const delta = part.choices[0].delta.content;
+
+//   console.log(JSON.stringify(part));
+// }
 
 export async function chatFile(fileDir: string) {
   // 'src/public/htyc.docx'

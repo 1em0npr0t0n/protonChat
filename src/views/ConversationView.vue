@@ -75,5 +75,9 @@ onMounted(async () => {
     lastQuestion = lastMessage?.content || '';
     await creatingInitMessage();
   }
+  window.electronAPI.onUpdateMessage((streamData) => {
+    console.log('echo streamData');
+    console.log(streamData);
+  });
 });
 </script>
