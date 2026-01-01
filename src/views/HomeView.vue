@@ -13,10 +13,13 @@ import MassageInput from '../components/MassageInput.vue';
 import { ProviderProps } from '../types';
 import { db } from '../db/db';
 import { useRouter } from 'vue-router';
+import { useConversationStore } from '../stores/conversaation';
 const router = useRouter();
 const providers = ref<ProviderProps[]>([]);
 //const message = ref('');
 const currentConversation = ref('');
+
+const conversationStore = useConversationStore();
 // function onClick() {
 //   console.log(message.value);
 // }
@@ -32,20 +35,20 @@ const providerInfo = computed(() => {
 });
 const createConversation = async (question: string) => {
   const { providerId, providerModel } = providerInfo.value;
-  const currentData = new Date().toISOString();
-  const conversationId = await db.conversations.add({
+  const currentDate = new Date().toISOString();
+  const conversationId = await conversationStore.createConversation({
     providerId,
     selectedModel: providerModel,
     title: question,
-    createdAt: currentData,
-    updatedAt: currentData,
+    createdAt: currentDate,
+    updatedAt: currentDate,
   });
   const newMessageId = await db.messages.add({
     conversationId: parseInt(conversationId),
     type: 'question',
     content: question,
-    createdAt: currentData,
-    updatedAt: currentData,
+    createdAt: currentDate,
+    updatedAt: currentDate,
   });
   router.push(`/conversation/${conversationId}?init=${newMessageId}`);
   //${value.id}|${model}

@@ -14,24 +14,25 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { MessageProps, ConversationProps } from '../types';
+import { MessageProps } from '../types';
 import MessageList from '../components/MessageList.vue';
 import MassageInput from '../components/MassageInput.vue';
-import { ref, watch, reactive, onMounted } from 'vue';
+import { ref, watch, reactive, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { messages, conversations } from '../testData';
+import { messages } from '../testData';
 import { db } from '../db/db';
+import { useConversationStore } from '../stores/conversaation';
+const conversationStore = useConversationStore();
 const ms = reactive<{ list: MessageProps[] }>({ list: [] });
 const message = ref('');
-const conversation = ref<ConversationProps>();
 const route = useRoute();
-let conversationId = Number(route.params.id as string);
+let conversationId = ref(Number(route.params.id as string));
 let lastQuestion = '';
 const initMessageId = Number(route.query.init as string);
-
+const conversation = computed(() => conversationStore.getConversationById(conversationId.value));
 const creatingInitMessage = async () => {
   const createdData: Omit<MessageProps, 'id'> = {
-    conversationId,
+    conversationId: conversationId.value,
     type: 'answer',
     content: message.value,
     createdAt: new Date().toISOString(),
@@ -56,22 +57,21 @@ function onClick() {
   console.log(ms);
 }
 
-ms.list = messages.filter((item) => item.conversationId === conversationId);
-conversation.value = conversations.find((item) => Number(item.id) === conversationId);
+ms.list = messages.filter((item) => item.conversationId === conversationId.value);
+
 watch(
   () => route.params.id,
   async (newVal: string) => {
     //, oldVal: string
-    conversationId = Number(newVal);
-    conversation.value = await db.conversations.where({ id: conversationId }).first();
-    ms.list = await db.messages.where({ conversationId }).toArray();
+    conversationId.value = Number(newVal);
+
+    ms.list = await db.messages.where({ conversationId: conversationId.value }).toArray();
   }
 );
 onMounted(async () => {
-  conversation.value = await db.conversations.where({ id: conversationId }).first();
-  ms.list = await db.messages.where({ conversationId }).toArray();
+  ms.list = await db.messages.where({ conversationId: conversationId.value }).toArray();
   if (initMessageId) {
-    const lastMessage = await db.messages.where({ conversationId }).last();
+    const lastMessage = await db.messages.where({ conversationId: conversationId.value }).last();
     lastQuestion = lastMessage?.content || '';
     await creatingInitMessage();
   }
