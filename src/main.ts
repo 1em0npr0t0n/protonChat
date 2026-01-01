@@ -31,14 +31,16 @@ const createWindow = async () => {
         selectedModel,
       });
       for await (const chunk of stream) {
+        //console.log(JSON.stringify(chunk));
         const delta = chunk.choices[0].delta.content;
         const isFinished = chunk.choices[0].finish_reason === 'stop';
-        if (delta) {
+        //携带终止信号
+        if (delta || isFinished) {
           const returnData: UpdateStreamData = {
             messageId,
             data: {
               isFinished,
-              delta,
+              delta: delta ?? '', // 可能为空
             },
           };
           mainWindow.webContents.send('update-message', returnData);

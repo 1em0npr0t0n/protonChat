@@ -8,3 +8,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onUpdateMessage: (callback: OnUpdateMessage) =>
     ipcRenderer.on('update-message', (_event, data) => callback(data)),
 });
+/**
+ * //解开
+ onUpdateMessage: function(callback) {
+    return ipcRenderer.on('update-message', function(_event, data) {
+        return callback(data);
+    });
+  } 
+ */

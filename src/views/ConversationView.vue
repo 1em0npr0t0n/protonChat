@@ -75,9 +75,23 @@ onMounted(async () => {
     lastQuestion = lastMessage?.content || '';
     await creatingInitMessage();
   }
-  window.electronAPI.onUpdateMessage((streamData) => {
-    console.log('echo streamData');
+  window.electronAPI.onUpdateMessage(async (streamData) => {
     console.log(streamData);
+    const { messageId, data } = streamData;
+    const currentMessage = await db.messages.where({ id: messageId }).first();
+    if (currentMessage) {
+      const updateData: Omit<MessageProps, 'id' | 'createdAt' | 'conversationId'> = {
+        type: 'answer',
+        content: currentMessage.content + data.delta,
+        updatedAt: new Date().toISOString(),
+        statue: data.isFinished ? 'finished' : 'streaming',
+      };
+      await db.messages.update(messageId, updateData);
+      const index = ms.list.findIndex((Item) => Item.id === messageId);
+      if (index !== -1) {
+        ms.list[index] = { ...ms.list[index], ...updateData };
+      }
+    }
   });
 });
 </script>
