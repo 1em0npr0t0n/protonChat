@@ -14,6 +14,7 @@ export const useConversationStore = defineStore('conversation', {
   actions: {
     async fetchConversations() {
       const items = await db.conversations.toArray();
+      console.log('items', items);
       this.conversations = items;
     },
     async createConversation(createData: Omit<ConversationProps, 'id'>) {
@@ -26,7 +27,7 @@ export const useConversationStore = defineStore('conversation', {
   getters: {
     totalNumber: (state) => state.conversations.length,
     getConversationById: (state) => (id: number) => {
-      return state.conversations.find((item) => item.id === String(id));
+      return state.conversations.find((item) => Number(item.id) === id);
     },
   },
 });

@@ -7,7 +7,7 @@
     <span class="text-sm text-gray-500">{{ conversation.selectedModel }}</span>
   </div>
   <div class="w-[80%] h-[75%] mt-[5px] mx-auto grid grid-cols-1 grid-rows-5 gap-4 overflow-y-auto">
-    <MessageList :messages="ms.list" />
+    <MessageList :messages="filteredMessages" />
   </div>
   <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
     <MassageInput v-model="message" class="w-full" @on-click="onClick" />
@@ -17,19 +17,23 @@
 import { MessageProps } from '../types';
 import MessageList from '../components/MessageList.vue';
 import MassageInput from '../components/MassageInput.vue';
-import { ref, watch, reactive, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { messages } from '../testData';
+//import { messages } from '../testData';
 import { db } from '../db/db';
 import { useConversationStore } from '../stores/conversaation';
+import { useMessageStore } from '../stores/messageStore';
+const messageStore = useMessageStore();
 const conversationStore = useConversationStore();
-const ms = reactive<{ list: MessageProps[] }>({ list: [] });
+const filteredMessages = computed(() => messageStore.messages);
 const message = ref('');
 const route = useRoute();
 let conversationId = ref(Number(route.params.id as string));
-let lastQuestion = '';
+console.log('conversationId.value', conversationId.value);
+let lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value));
 const initMessageId = Number(route.query.init as string);
 const conversation = computed(() => conversationStore.getConversationById(conversationId.value));
+console.log('conversation.value', conversation.value);
 const creatingInitMessage = async () => {
   const createdData: Omit<MessageProps, 'id'> = {
     conversationId: conversationId.value,
@@ -39,25 +43,27 @@ const creatingInitMessage = async () => {
     updatedAt: new Date().toISOString(),
     statue: 'loading',
   };
-  const newMessageId = await db.messages.add(createdData);
-  ms.list.push({ id: newMessageId, ...createdData });
+  const newMessageId = await messageStore.createMessage(createdData);
+  console.log('newMessageId', newMessageId, 'conversation', conversation.value);
   if (conversation.value) {
+    console.log('conversation.value', conversation.value);
     const provider = await db.providers.where({ id: conversation.value?.providerId }).first();
     if (provider) {
+      console.log('lastQuestion.value', lastQuestion.value, 'provider', provider);
       await window.electronAPI.startChat({
         messageId: newMessageId,
         providerName: provider?.name || '',
         selectedModel: conversation.value?.selectedModel || '',
-        content: lastQuestion,
+        content: lastQuestion.value?.content || '',
       });
     }
   }
 };
 function onClick() {
-  console.log(ms);
+  console.log(filteredMessages);
 }
 
-ms.list = messages.filter((item) => item.conversationId === conversationId.value);
+//filteredMessages.value = messages.filter((item) => item.conversationId === conversationId.value);
 
 watch(
   () => route.params.id,
@@ -65,33 +71,19 @@ watch(
     //, oldVal: string
     conversationId.value = Number(newVal);
 
-    ms.list = await db.messages.where({ conversationId: conversationId.value }).toArray();
+    await messageStore.fetchMessagesbyConversationId(conversationId.value);
   }
 );
 onMounted(async () => {
-  ms.list = await db.messages.where({ conversationId: conversationId.value }).toArray();
+  await messageStore.fetchMessagesbyConversationId(conversationId.value);
   if (initMessageId) {
-    const lastMessage = await db.messages.where({ conversationId: conversationId.value }).last();
-    lastQuestion = lastMessage?.content || '';
+    console.log('initMessageId', initMessageId);
     await creatingInitMessage();
   }
   window.electronAPI.onUpdateMessage(async (streamData) => {
     console.log(streamData);
-    const { messageId, data } = streamData;
-    const currentMessage = await db.messages.where({ id: messageId }).first();
-    if (currentMessage) {
-      const updateData: Omit<MessageProps, 'id' | 'createdAt' | 'conversationId'> = {
-        type: 'answer',
-        content: currentMessage.content + data.delta,
-        updatedAt: new Date().toISOString(),
-        statue: data.isFinished ? 'finished' : 'streaming',
-      };
-      await db.messages.update(messageId, updateData);
-      const index = ms.list.findIndex((Item) => Item.id === messageId);
-      if (index !== -1) {
-        ms.list[index] = { ...ms.list[index], ...updateData };
-      }
-    }
+    //const { messageId, data } = streamData;
+    messageStore.updateMessage(streamData);
   });
 });
 </script>

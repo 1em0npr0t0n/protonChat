@@ -37,6 +37,7 @@ onMounted(async () => {
   await initProviders();
   //conversationStore.conversations = await db.conversations.toArray();
   conversationStore.fetchConversations();
+  console.log('conversations', conversations.value);
 });
 
 //console.log('👋 This message is being logged by "App.vue", included via Vite');
