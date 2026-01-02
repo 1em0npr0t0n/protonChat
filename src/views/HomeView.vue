@@ -14,10 +14,12 @@ import { ProviderProps } from '../types';
 import { db } from '../db/db';
 import { useRouter } from 'vue-router';
 import { useConversationStore } from '../stores/conversaation';
+import { useMessageStore } from '../stores/messageStore';
 const router = useRouter();
 const providers = ref<ProviderProps[]>([]);
 //const message = ref('');
 const currentConversation = ref('');
+const messagesStore = useMessageStore();
 
 const conversationStore = useConversationStore();
 // function onClick() {
@@ -43,7 +45,14 @@ const createConversation = async (question: string) => {
     createdAt: currentDate,
     updatedAt: currentDate,
   });
-  const newMessageId = await db.messages.add({
+  // const newMessageId = await db.messages.add({
+  //   conversationId: parseInt(conversationId),
+  //   type: 'question',
+  //   content: question,
+  //   createdAt: currentDate,
+  //   updatedAt: currentDate,
+  // });
+  const newMessageId = await messagesStore.createMessage({
     conversationId: parseInt(conversationId),
     type: 'question',
     content: question,

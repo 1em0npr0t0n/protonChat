@@ -30,7 +30,7 @@
 import CustomButton from '../components/CustomButton.vue';
 const message = defineModel<string>();
 const emit = defineEmits<{
-  (e: 'create', message: string): void;
+  create: [value: string];
 }>();
 const onCreate = () => {
   if (message.value && message.value.trim() !== '') {

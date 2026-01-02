@@ -14,17 +14,12 @@ export class BaiduOpenAI {
       `百度文心一言API初始化完成, baseURL: ${process.env.BAIDU_API_URL}|apiKey: ${process.env.BAIDU_API_KEY}`
     );
   }
-  async chatMessage(props: ChatMessageProps) {
+  async chatMessage(sendMessages: ChatMessageProps[], selectedModel: string) {
     try {
-      console.log(JSON.stringify(props));
+      //console.log(JSON.stringify(sendMessages));
       const stream = await this.openai.chat.completions.create({
-        model: props.selectedModel,
-        messages: [
-          {
-            role: props.role,
-            content: props.content,
-          },
-        ],
+        model: selectedModel,
+        messages: sendMessages,
         stream: true,
         temperature: 0.95,
         top_p: 0.7,

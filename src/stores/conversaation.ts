@@ -14,7 +14,6 @@ export const useConversationStore = defineStore('conversation', {
   actions: {
     async fetchConversations() {
       const items = await db.conversations.toArray();
-      console.log('items', items);
       this.conversations = items;
     },
     async createConversation(createData: Omit<ConversationProps, 'id'>) {

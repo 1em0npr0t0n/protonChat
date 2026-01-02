@@ -10,11 +10,11 @@
     <MessageList :messages="filteredMessages" />
   </div>
   <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
-    <MassageInput v-model="message" class="w-full" @on-click="onClick" />
+    <MassageInput v-model="inputValue" class="w-full" @create="sendNewMessage" />
   </div>
 </template>
 <script lang="ts" setup>
-import { MessageProps } from '../types';
+import { MessageProps, ChatMessageProps } from '../types';
 import MessageList from '../components/MessageList.vue';
 import MassageInput from '../components/MassageInput.vue';
 import { ref, watch, onMounted, computed } from 'vue';
@@ -26,42 +26,63 @@ import { useMessageStore } from '../stores/messageStore';
 const messageStore = useMessageStore();
 const conversationStore = useConversationStore();
 const filteredMessages = computed(() => messageStore.messages);
-const message = ref('');
+const sendMessages = computed(() =>
+  filteredMessages.value
+    .filter((item) => item.statue !== 'loading')
+    .map((message): ChatMessageProps => {
+      return {
+        role: message.type === 'question' ? 'user' : 'assistant',
+        content: message.content,
+      };
+    })
+);
+
+const inputValue = ref('');
 const route = useRoute();
 let conversationId = ref(Number(route.params.id as string));
-console.log('conversationId.value', conversationId.value);
 let lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value));
 const initMessageId = Number(route.query.init as string);
 const conversation = computed(() => conversationStore.getConversationById(conversationId.value));
-console.log('conversation.value', conversation.value);
+const sendNewMessage = async (question: string) => {
+  console.log('wai sendNewMessage uestion', question);
+  if (question) {
+    console.log('nei sendNewMessage uestion', question);
+    const _newMessageId = await messageStore.createMessage({
+      conversationId: conversationId.value,
+      type: 'question',
+      content: question,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+    console.log('nei _newMessageId', _newMessageId);
+    inputValue.value = '';
+    await creatingInitMessage();
+  }
+};
 const creatingInitMessage = async () => {
   const createdData: Omit<MessageProps, 'id'> = {
     conversationId: conversationId.value,
     type: 'answer',
-    content: message.value,
+    content: '',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     statue: 'loading',
   };
   const newMessageId = await messageStore.createMessage(createdData);
-  console.log('newMessageId', newMessageId, 'conversation', conversation.value);
   if (conversation.value) {
-    console.log('conversation.value', conversation.value);
     const provider = await db.providers.where({ id: conversation.value?.providerId }).first();
-    if (provider) {
-      console.log('lastQuestion.value', lastQuestion.value, 'provider', provider);
+    if (provider && sendMessages.value.length > 0) {
+      console.log('sendMessages', sendMessages, 'filteredMessages.value', filteredMessages.value);
       await window.electronAPI.startChat({
         messageId: newMessageId,
         providerName: provider?.name || '',
         selectedModel: conversation.value?.selectedModel || '',
-        content: lastQuestion.value?.content || '',
+        //content: lastQuestion.value?.content || '',
+        messages: sendMessages.value,
       });
     }
   }
 };
-function onClick() {
-  console.log(filteredMessages);
-}
 
 //filteredMessages.value = messages.filter((item) => item.conversationId === conversationId.value);
 
@@ -77,11 +98,10 @@ watch(
 onMounted(async () => {
   await messageStore.fetchMessagesbyConversationId(conversationId.value);
   if (initMessageId) {
-    console.log('initMessageId', initMessageId);
     await creatingInitMessage();
   }
   window.electronAPI.onUpdateMessage(async (streamData) => {
-    console.log(streamData);
+    //console.log(streamData);
     //const { messageId, data } = streamData;
     messageStore.updateMessage(streamData);
   });

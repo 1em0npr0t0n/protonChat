@@ -20,16 +20,13 @@ const createWindow = async () => {
   });
 
   //
-  ipcMain.on('start-chat', async (event, args: CreateChatProps) => {
+  ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
     console.log(args);
-    const { providerName, content, selectedModel, messageId } = args;
+    const { providerName, messages, selectedModel, messageId } = args;
     if (providerName === 'ernie') {
       const ernie = new BaiduOpenAI();
-      const stream = await ernie.chatMessage({
-        role: 'user',
-        content,
-        selectedModel,
-      });
+      console.log('messages', messages, 'selectedModel', selectedModel);
+      const stream = await ernie.chatMessage(messages, selectedModel);
       for await (const chunk of stream) {
         //console.log(JSON.stringify(chunk));
         const delta = chunk.choices[0].delta.content;

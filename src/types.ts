@@ -30,11 +30,11 @@ export interface MessageProps {
 export interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
-  selectedModel: string;
 }
 
 export interface CreateChatProps {
-  content: string;
+  //content: string;
+  messages: ChatMessageProps[];
   providerName: string;
   selectedModel: string;
   messageId: number;
