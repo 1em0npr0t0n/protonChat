@@ -3,6 +3,7 @@ import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { CreateChatProps, UpdateStreamData } from './types';
 import { BaiduOpenAI } from './services/baidu';
+import { QwenOpenAI } from './services/qwen';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -23,10 +24,31 @@ const createWindow = async () => {
   ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
     console.log(args);
     const { providerName, messages, selectedModel, messageId } = args;
+    let stream: any = null;
     if (providerName === 'ernie') {
+      stream = null;
       const ernie = new BaiduOpenAI();
       console.log('messages', messages, 'selectedModel', selectedModel);
-      const stream = await ernie.chatMessage(messages, selectedModel);
+      stream = await ernie.chatMessage(messages, selectedModel);
+    } else if (providerName === 'qwen') {
+      stream = null;
+      const qwen = new QwenOpenAI();
+      switch (selectedModel) {
+        case 'qwen-plus':
+          console.log('qwen-plusmessages', messages, 'selectedModel', selectedModel);
+          stream = await qwen.chatMessage(messages, selectedModel);
+          break;
+        case 'qwen3-vl-plus':
+          console.log('qwen3-vl-plusmessages', messages, 'selectedModel', selectedModel);
+          break;
+        case 'qwen-long':
+          console.log('qwen-longmessages', messages, 'selectedModel', selectedModel);
+          break;
+        default:
+          break;
+      }
+    }
+    if (stream !== null) {
       for await (const chunk of stream) {
         //console.log(JSON.stringify(chunk));
         const delta = chunk.choices[0].delta.content;
@@ -43,6 +65,8 @@ const createWindow = async () => {
           mainWindow.webContents.send('update-message', returnData);
         }
       }
+    } else {
+      //为空
     }
   });
 

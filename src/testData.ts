@@ -15,7 +15,7 @@ export const providers: ProviderProps[] = [
     name: 'qwen',
     title: '通义千问',
     desc: '通义千问是一个基于大模型的智能问答系统，由字节跳动开发。',
-    models: ['qwen3-vl-plus', 'qwen-long'],
+    models: ['qwen-plus', 'qwen3-vl-plus', 'qwen-long'],
     createdAt: '2023-08-01',
     updatedAt: '2023-08-01',
     avatar: 'https://www.baidu.com/favicon.ico',

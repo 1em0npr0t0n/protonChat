@@ -10,7 +10,12 @@
     <MessageList :messages="filteredMessages" />
   </div>
   <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
-    <MassageInput v-model="inputValue" class="w-full" @create="sendNewMessage" />
+    <MassageInput
+      v-model="inputValue"
+      class="w-full"
+      :disabled="messageStore.isMessageLoading()"
+      @create="sendNewMessage"
+    />
   </div>
 </template>
 <script lang="ts" setup>
@@ -21,7 +26,7 @@ import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 //import { messages } from '../testData';
 import { db } from '../db/db';
-import { useConversationStore } from '../stores/conversaation';
+import { useConversationStore } from '../stores/conversaationStore';
 import { useMessageStore } from '../stores/messageStore';
 const messageStore = useMessageStore();
 const conversationStore = useConversationStore();
@@ -40,7 +45,7 @@ const sendMessages = computed(() =>
 const inputValue = ref('');
 const route = useRoute();
 let conversationId = ref(Number(route.params.id as string));
-let lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value));
+//let lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value));
 const initMessageId = Number(route.query.init as string);
 const conversation = computed(() => conversationStore.getConversationById(conversationId.value));
 const sendNewMessage = async (question: string) => {

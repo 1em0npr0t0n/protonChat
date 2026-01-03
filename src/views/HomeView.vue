@@ -3,7 +3,11 @@
     <ProviderSelect v-model="currentConversation" class="row-start-3" :providers="providers" />
   </div>
   <div class="w-[80%] h-[15%] mx-auto flex justify-center items-center">
-    <MassageInput class="w-full" @create="createConversation" />
+    <MassageInput
+      class="w-full"
+      :disabled="currentConversation === ''"
+      @create="createConversation"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -13,7 +17,7 @@ import MassageInput from '../components/MassageInput.vue';
 import { ProviderProps } from '../types';
 import { db } from '../db/db';
 import { useRouter } from 'vue-router';
-import { useConversationStore } from '../stores/conversaation';
+import { useConversationStore } from '../stores/conversaationStore';
 import { useMessageStore } from '../stores/messageStore';
 const router = useRouter();
 const providers = ref<ProviderProps[]>([]);

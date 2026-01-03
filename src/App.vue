@@ -29,7 +29,7 @@ import ConversationList from './components/ConversationList.vue';
 import CustomButton from './components/CustomButton.vue';
 import { onMounted, computed } from 'vue';
 //import { ConversationProps } from './types';
-import { useConversationStore } from './stores/conversaation';
+import { useConversationStore } from './stores/conversaationStore';
 //const conversationsFromDB = ref<ConversationProps[]>([]);
 const conversationStore = useConversationStore();
 const conversations = computed(() => conversationStore.conversations);

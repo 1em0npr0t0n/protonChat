@@ -5,6 +5,7 @@
       class="rounded-md border border-gray-300 p-2 flex-1"
       type="text"
       placeholder="聊点什么呢？"
+      :disabled="disabled"
     />
 
     <!-- <button
@@ -17,9 +18,9 @@
     <CustomButton
       class="absolute right-0 mr-1"
       color="cyan"
-      plain
       size="small"
       :icon="'radix-icons:paper-plane'"
+      :disabled="disabled"
       @click="onCreate"
     >
       发送
@@ -28,6 +29,9 @@
 </template>
 <script setup lang="ts">
 import CustomButton from '../components/CustomButton.vue';
+defineProps<{
+  disabled?: boolean;
+}>();
 const message = defineModel<string>();
 const emit = defineEmits<{
   create: [value: string];
