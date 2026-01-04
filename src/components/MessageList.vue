@@ -22,9 +22,9 @@
             <template v-if="message.statue === 'loading'">
               <Icon icon="eos-icons:three-dots-loading" />
             </template>
-            <template v-else>
-              {{ message.content }}
-            </template>
+            <div v-else class="prose">
+              <VueMarkdown :source="message.content" />
+            </div>
           </div>
         </div>
       </div>
@@ -34,6 +34,7 @@
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue';
 import dayjs from 'dayjs';
+import VueMarkdown from 'vue-markdown-render';
 import { MessageProps } from '../types';
 defineProps<{ messages: MessageProps[] }>();
 </script>
