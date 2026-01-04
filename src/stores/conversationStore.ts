@@ -4,11 +4,13 @@ import { db } from '../db/db';
 
 export interface ConversationStore {
   conversations: ConversationProps[];
+  selectedConversationId: number;
 }
 export const useConversationStore = defineStore('conversation', {
   state: (): ConversationStore => {
     return {
       conversations: [],
+      selectedConversationId: -1,
     };
   },
   actions: {

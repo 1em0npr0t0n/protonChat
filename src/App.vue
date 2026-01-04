@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-between h-screen">
-    <div class="bg-gray-200 w-[300px] h-full border-r border-gray-300 hover:bg-gray-300">
+    <div class="bg-gray-200 w-[300px] h-full border-r border-gray-300">
       <div class="h-[90%] overflow-y-auto">
         <ConversationList :items="conversations" />
       </div>
@@ -29,7 +29,7 @@ import ConversationList from './components/ConversationList.vue';
 import CustomButton from './components/CustomButton.vue';
 import { onMounted, computed } from 'vue';
 //import { ConversationProps } from './types';
-import { useConversationStore } from './stores/conversaationStore';
+import { useConversationStore } from './stores/conversationStore';
 //const conversationsFromDB = ref<ConversationProps[]>([]);
 const conversationStore = useConversationStore();
 const conversations = computed(() => conversationStore.conversations);

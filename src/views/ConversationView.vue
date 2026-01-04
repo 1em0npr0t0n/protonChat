@@ -25,11 +25,12 @@ import MassageInput from '../components/MassageInput.vue';
 import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 //import { messages } from '../testData';
-import { db } from '../db/db';
-import { useConversationStore } from '../stores/conversaationStore';
+import { useProviderStore } from '../stores/providerStore';
+import { useConversationStore } from '../stores/conversationStore';
 import { useMessageStore } from '../stores/messageStore';
 const messageStore = useMessageStore();
 const conversationStore = useConversationStore();
+const providerStore = useProviderStore();
 const filteredMessages = computed(() => messageStore.messages);
 const sendMessages = computed(() =>
   filteredMessages.value
@@ -75,7 +76,8 @@ const creatingInitMessage = async () => {
   };
   const newMessageId = await messageStore.createMessage(createdData);
   if (conversation.value) {
-    const provider = await db.providers.where({ id: conversation.value?.providerId }).first();
+    //const provider = await db.providers.where({ id: conversation.value?.providerId }).first();
+    const provider = providerStore.getProviderById(conversation.value.providerId);
     if (provider && sendMessages.value.length > 0) {
       console.log('sendMessages', sendMessages, 'filteredMessages.value', filteredMessages.value);
       await window.electronAPI.startChat({

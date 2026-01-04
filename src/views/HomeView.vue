@@ -14,13 +14,14 @@
 import ProviderSelect from '../components/ProviderSelect.vue';
 import { computed, onMounted, ref } from 'vue';
 import MassageInput from '../components/MassageInput.vue';
-import { ProviderProps } from '../types';
-import { db } from '../db/db';
 import { useRouter } from 'vue-router';
-import { useConversationStore } from '../stores/conversaationStore';
+import { useConversationStore } from '../stores/conversationStore';
 import { useMessageStore } from '../stores/messageStore';
 const router = useRouter();
-const providers = ref<ProviderProps[]>([]);
+//const providers = ref<ProviderProps[]>([]);
+import { useProviderStore } from '../stores/providerStore';
+const providerStore = useProviderStore();
+const providers = computed(() => providerStore.providers);
 //const message = ref('');
 const currentConversation = ref('');
 const messagesStore = useMessageStore();
@@ -30,7 +31,8 @@ const conversationStore = useConversationStore();
 //   console.log(message.value);
 // }
 onMounted(async () => {
-  providers.value = await db.providers.toArray();
+  //providers.value = await db.providers.toArray();
+  await providerStore.fetchProviders();
 });
 const providerInfo = computed(() => {
   const [id, model] = currentConversation.value.split('|');
