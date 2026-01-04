@@ -6,8 +6,8 @@
     <h3 class="text-sm font-bold underline inline-block">{{ conversation.title }}</h3>
     <span class="text-sm text-gray-500">{{ conversation.selectedModel }}</span>
   </div>
-  <div class="w-[80%] h-[75%] mt-[5px] mx-auto grid grid-cols-1 grid-rows-5 gap-4 overflow-y-auto">
-    <MessageList :messages="filteredMessages" />
+  <div ref="messageListContainerRef" class="w-[80%] h-[75%] mt-[5px] mx-auto overflow-y-auto">
+    <MessageList ref="messageListRef" :messages="filteredMessages" />
   </div>
   <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
     <MassageInput
@@ -19,10 +19,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { MessageProps, ChatMessageProps } from '../types';
+import { MessageProps, ChatMessageProps, MessageListInstance } from '../types';
 import MessageList from '../components/MessageList.vue';
 import MassageInput from '../components/MassageInput.vue';
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, computed, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 //import { messages } from '../testData';
 import { useProviderStore } from '../stores/providerStore';
@@ -44,6 +44,7 @@ const sendMessages = computed(() =>
 );
 
 const inputValue = ref('');
+const messageListRef = ref<MessageListInstance>();
 const route = useRoute();
 let conversationId = ref(Number(route.params.id as string));
 //let lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value));
@@ -75,6 +76,7 @@ const creatingInitMessage = async () => {
     statue: 'loading',
   };
   const newMessageId = await messageStore.createMessage(createdData);
+  await messageScrollTobotton();
   if (conversation.value) {
     //const provider = await db.providers.where({ id: conversation.value?.providerId }).first();
     const provider = providerStore.getProviderById(conversation.value.providerId);
@@ -92,7 +94,12 @@ const creatingInitMessage = async () => {
 };
 
 //filteredMessages.value = messages.filter((item) => item.conversationId === conversationId.value);
-
+const messageScrollTobotton = async () => {
+  await nextTick();
+  if (messageListRef.value) {
+    messageListRef.value.ref.scrollIntoView({ block: 'end', behavior: 'smooth' });
+  }
+};
 watch(
   () => route.params.id,
   async (newVal: string) => {
@@ -100,17 +107,29 @@ watch(
     conversationId.value = Number(newVal);
 
     await messageStore.fetchMessagesbyConversationId(conversationId.value);
+    await messageScrollTobotton();
   }
 );
 onMounted(async () => {
   await messageStore.fetchMessagesbyConversationId(conversationId.value);
+  await messageScrollTobotton();
   if (initMessageId) {
     await creatingInitMessage();
   }
+  let currentMessageListHeight = 0;
+  const checkAndScrollToBottom = async () => {
+    const newHeight = messageListRef.value?.ref.clientHeight;
+    if (newHeight && newHeight > currentMessageListHeight) {
+      currentMessageListHeight = newHeight;
+      await messageScrollTobotton();
+    }
+  };
   window.electronAPI.onUpdateMessage(async (streamData) => {
     //console.log(streamData);
     //const { messageId, data } = streamData;
     messageStore.updateMessage(streamData);
+    await nextTick();
+    await checkAndScrollToBottom();
   });
 });
 </script>
