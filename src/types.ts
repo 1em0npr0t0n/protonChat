@@ -44,3 +44,7 @@ export interface UpdateStreamData {
   data: { isFinished: boolean; delta: string };
 }
 export type OnUpdateMessage = (data: UpdateStreamData) => void;
+
+export interface MessageListInstance {
+  ref: HTMLDivElement;
+}
