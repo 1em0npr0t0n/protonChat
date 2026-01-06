@@ -1,16 +1,33 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, net, protocol } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { CreateChatProps, UpdateStreamData } from './types';
 import { BaiduOpenAI } from './services/baidu';
 import { QwenOpenAI } from './services/qwen';
+import url from 'node:url';
 import { convertMessages } from './helper';
 import fs from 'fs/promises';
+import { lookup } from 'mime-types';
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'safe-file',
+    privileges: {
+      standard: true,
+    },
+  },
+]);
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
+// app.whenReady().then(async () => {
+//   // 注册协议处理程序
+//   protocol.handle('safe-file', async (request) => {
+//     console.log('request', request.url);
+//     return new Response();
+//   });
+// });
 
 const createWindow = async () => {
   // Create the browser window.
@@ -20,6 +37,23 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+  });
+  // 注册协议处理程序
+  protocol.handle('safe-file', async (request) => {
+    let filePath = request.url.replace('safe-file://', '');
+    // Handle Windows absolute paths that start with drive letter
+    if (process.platform === 'win32') {
+      // If the path starts with / followed by a drive letter (like /c/Users/...),
+      // convert it to a proper Windows path (c:\Users\...)
+
+      if (/^[a-zA-Z]\//.test(filePath)) {
+        filePath = filePath.substring(0, 1) + ':' + filePath.substring(1).replace(/\//g, '\\');
+      } else if (/^\/[a-zA-Z]\//.test(filePath)) {
+        filePath = filePath.substring(1, 2) + ':' + filePath.substring(2).replace(/\//g, '\\');
+      }
+    }
+    const newFilePath = url.pathToFileURL(filePath).toString();
+    return net.fetch(newFilePath);
   });
   ipcMain.handle('copy-image-to-user-dir', async (_event, fileName: string, base64Data: string) => {
     const UserDataPath = app.getPath('userData');

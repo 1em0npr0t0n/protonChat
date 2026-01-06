@@ -13,6 +13,12 @@
             v-if="message.type === 'question'"
             class="message-content bg-cyan-500 text-white p-2 rounded-lg"
           >
+            <img
+              v-if="message.imagePath"
+              :src="`safe-file://${message.imagePath}`"
+              alt="图片"
+              class="h-24 w-24 object-cover rounded-md block"
+            />
             {{ message.content }}
           </div>
           <div
