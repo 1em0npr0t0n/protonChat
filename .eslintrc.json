@@ -20,7 +20,15 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts", ".vue"]
+      }
+    }
+  },
   "rules": {
+    "import/no-unresolved": ["error", { "ignore": [".css$", ".scss$", ".sass$", ".less$"] }],
     "prettier/prettier": [
       "error",
       {

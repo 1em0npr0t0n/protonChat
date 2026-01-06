@@ -22,7 +22,7 @@ export class QwenOpenAI {
           role: 'user',
           content: [
             { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
-            { type: 'text', text: props.content },
+            { type: 'text', text: props.content as string },
           ],
         },
       ],
@@ -66,6 +66,7 @@ export class QwenOpenAI {
   }
 
   //let isAnswering = false;
+  //阿里qwen模型
   async chatMessage(sendMessages: ChatMessageProps[], selectedModel: string) {
     try {
       const stream = await this.openai.chat.completions.create({

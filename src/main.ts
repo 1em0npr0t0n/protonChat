@@ -4,6 +4,8 @@ import started from 'electron-squirrel-startup';
 import { CreateChatProps, UpdateStreamData } from './types';
 import { BaiduOpenAI } from './services/baidu';
 import { QwenOpenAI } from './services/qwen';
+import { convertMessages } from './helper';
+import fs from 'fs/promises';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -19,34 +21,45 @@ const createWindow = async () => {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-
+  ipcMain.handle('copy-image-to-user-dir', async (_event, fileName: string, base64Data: string) => {
+    const UserDataPath = app.getPath('userData');
+    const imagesDir = path.join(UserDataPath, 'images');
+    await fs.mkdir(imagesDir, { recursive: true });
+    //const fileName = path.basename(sourcePath);
+    const destPath = path.join(imagesDir, fileName);
+    const buffer = Buffer.from(base64Data, 'base64');
+    await fs.writeFile(destPath, buffer);
+    return destPath;
+  });
   //
   ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
     console.log(args);
     const { providerName, messages, selectedModel, messageId } = args;
+    const convertedMessages = await convertMessages(messages);
     let stream: any = null;
     if (providerName === 'ernie') {
       stream = null;
       const ernie = new BaiduOpenAI();
-      console.log('messages', messages, 'selectedModel', selectedModel);
-      stream = await ernie.chatMessage(messages, selectedModel);
+      console.log('messages', convertedMessages, 'selectedModel', selectedModel);
+      stream = await ernie.chatMessage(convertedMessages, selectedModel);
     } else if (providerName === 'qwen') {
       stream = null;
       const qwen = new QwenOpenAI();
-      switch (selectedModel) {
-        case 'qwen-plus':
-          console.log('qwen-plusmessages', messages, 'selectedModel', selectedModel);
-          stream = await qwen.chatMessage(messages, selectedModel);
-          break;
-        case 'qwen3-vl-plus':
-          console.log('qwen3-vl-plusmessages', messages, 'selectedModel', selectedModel);
-          break;
-        case 'qwen-long':
-          console.log('qwen-longmessages', messages, 'selectedModel', selectedModel);
-          break;
-        default:
-          break;
-      }
+      // switch (selectedModel) {
+      //   case 'qwen-plus':
+      //     console.log('qwen-plusmessages', messages, 'selectedModel', selectedModel);
+      //     stream = await qwen.chatMessage(messages, selectedModel);
+      //     break;
+      //   case 'qwen3-vl-plus':
+      //     console.log('qwen3-vl-plusmessages', messages, 'selectedModel', selectedModel);
+      //     break;
+      //   case 'qwen-long':
+      //     console.log('qwen-longmessages', messages, 'selectedModel', selectedModel);
+      //     break;
+      //   default:
+      //     break;
+      // }
+      stream = await qwen.chatMessage(convertedMessages, selectedModel);
     }
     if (stream !== null) {
       for await (const chunk of stream) {

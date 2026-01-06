@@ -25,11 +25,19 @@ export interface MessageProps {
   statue?: MessageStatus;
   createdAt: string;
   updatedAt: string;
+  imagePath?: string;
 }
-
+export type ChatMessageImageContent = {
+  type: string;
+  text?: string;
+  image_url?: {
+    url: string;
+  };
+};
 export interface ChatMessageProps {
   role: 'user' | 'assistant';
-  content: string;
+  content: string | ChatMessageImageContent[];
+  imagePath?: string;
 }
 
 export interface CreateChatProps {

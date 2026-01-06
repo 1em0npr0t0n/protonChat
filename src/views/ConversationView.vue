@@ -39,6 +39,7 @@ const sendMessages = computed(() =>
       return {
         role: message.type === 'question' ? 'user' : 'assistant',
         content: message.content,
+        ...(message.imagePath ? { imagePath: message.imagePath } : {}),
       };
     })
 );

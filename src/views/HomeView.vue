@@ -41,7 +41,7 @@ const providerInfo = computed(() => {
     providerModel: model,
   };
 });
-const createConversation = async (question: string) => {
+const createConversation = async (question: string, imagePath?: string) => {
   const { providerId, providerModel } = providerInfo.value;
   const currentDate = new Date().toISOString();
   const conversationId = await conversationStore.createConversation({
@@ -51,6 +51,7 @@ const createConversation = async (question: string) => {
     createdAt: currentDate,
     updatedAt: currentDate,
   });
+  console.log('conversation imagePath', imagePath);
   // const newMessageId = await db.messages.add({
   //   conversationId: parseInt(conversationId),
   //   type: 'question',
@@ -64,6 +65,7 @@ const createConversation = async (question: string) => {
     content: question,
     createdAt: currentDate,
     updatedAt: currentDate,
+    ...(imagePath ? { imagePath: imagePath } : {}),
   });
   router.push(`/conversation/${conversationId}?init=${newMessageId}`);
   //${value.id}|${model}

@@ -7,6 +7,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   startChat: (data: CreateChatProps) => ipcRenderer.send('start-chat', data),
   onUpdateMessage: (callback: OnUpdateMessage) =>
     ipcRenderer.on('update-message', (_event, data) => callback(data)),
+  copyImageToUserDir: (fileName: string, base64Data: string) =>
+    ipcRenderer.invoke('copy-image-to-user-dir', fileName, base64Data),
 });
 /**
  * //解开

@@ -58,12 +58,19 @@ const props = defineProps<{
 const message = defineModel<string>();
 const fileInput = ref<HTMLInputElement | null>();
 const imagePreview = ref<string>('');
+let selectedFile: File | null = null;
 const emit = defineEmits<{
-  create: [value: string];
+  create: [value: string, imagePath?: string];
 }>();
-const onCreate = () => {
+const onCreate = async () => {
   if (message.value && message.value.trim() !== '') {
-    emit('create', message.value);
+    let imagePath: string | undefined = undefined;
+    if (selectedFile) {
+      const base64 = await fileToBase64(selectedFile);
+      const base64Data = base64.split(',')[1];
+      imagePath = await window.electronAPI.copyImageToUserDir(selectedFile.name, base64Data);
+    }
+    emit('create', message.value, imagePath);
   }
 };
 const triggerFileInput = () => {
@@ -71,23 +78,30 @@ const triggerFileInput = () => {
     fileInput.value?.click();
   }
 };
-const handleImageUpload = (e: Event) => {
+
+const handleImageUpload = async (e: Event) => {
   const target = e.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
-    // const file = target.files[0];
-    // const reader = new FileReader();
-    // reader.readAsDataURL(file);
-    // reader.onload = () => {
-    //   if (reader.result) {
-    //     message.value = reader.result as string;
-    //   }
-    // };
     console.log(target.files, target.files[0]);
-    const reader = new FileReader();
-    reader.readAsDataURL(target.files[0]);
-    reader.onload = (e) => {
-      imagePreview.value = e.target?.result as string;
-    };
+    selectedFile = target.files[0];
+    imagePreview.value = await fileToBase64(selectedFile);
   }
 };
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+  });
+};
+
+// fcuntion fileToBase64(file: File): Promise<string> {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = () => resolve(reader.result as string);
+//     reader.onerror = reject;
+//   });
+// }
 </script>
