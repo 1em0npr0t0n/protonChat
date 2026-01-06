@@ -71,6 +71,9 @@ const onCreate = async () => {
       imagePath = await window.electronAPI.copyImageToUserDir(selectedFile.name, base64Data);
     }
     emit('create', message.value, imagePath);
+    message.value = '';
+    selectedFile = null;
+    imagePreview.value = '';
   }
 };
 const triggerFileInput = () => {
