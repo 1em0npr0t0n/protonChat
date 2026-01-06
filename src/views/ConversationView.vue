@@ -51,16 +51,18 @@ let conversationId = ref(Number(route.params.id as string));
 //let lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value));
 const initMessageId = Number(route.query.init as string);
 const conversation = computed(() => conversationStore.getConversationById(conversationId.value));
-const sendNewMessage = async (question: string) => {
+const sendNewMessage = async (question: string, imagePath?: string) => {
   console.log('wai sendNewMessage uestion', question);
   if (question) {
+    const currentDate = new Date().toISOString();
     console.log('nei sendNewMessage uestion', question);
     const _newMessageId = await messageStore.createMessage({
       conversationId: conversationId.value,
       type: 'question',
       content: question,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: currentDate,
+      updatedAt: currentDate,
+      ...(imagePath ? { imagePath: imagePath } : {}),
     });
     console.log('nei _newMessageId', _newMessageId);
     inputValue.value = '';
