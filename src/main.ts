@@ -7,7 +7,6 @@ import { QwenOpenAI } from './services/qwen';
 import url from 'node:url';
 import { convertMessages } from './helper';
 import fs from 'fs/promises';
-import { lookup } from 'mime-types';
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -21,13 +20,6 @@ protocol.registerSchemesAsPrivileged([
 if (started) {
   app.quit();
 }
-// app.whenReady().then(async () => {
-//   // 注册协议处理程序
-//   protocol.handle('safe-file', async (request) => {
-//     console.log('request', request.url);
-//     return new Response();
-//   });
-// });
 
 const createWindow = async () => {
   // Create the browser window.
