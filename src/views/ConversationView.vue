@@ -141,6 +141,9 @@ onMounted(async () => {
     await messageStore.updateMessage(messageId, updateData);
     await nextTick();
     await checkAndScrollToBottom();
+    if (data.isFinished) {
+      streamContent = '';
+    }
   });
 });
 </script>

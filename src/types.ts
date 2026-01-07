@@ -47,9 +47,13 @@ export interface CreateChatProps {
   selectedModel: string;
   messageId: number;
 }
+export interface ChatCompletionChunk {
+  isFinished: boolean;
+  delta: string;
+}
 export interface UpdateStreamData {
   messageId: number;
-  data: { isFinished: boolean; delta: string };
+  data: ChatCompletionChunk;
 }
 export type OnUpdateMessage = (data: UpdateStreamData) => void;
 

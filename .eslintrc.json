@@ -28,6 +28,13 @@
     }
   },
   "rules": {
+    "@typescript-eslint/no-this-alias": [
+      "error",
+      {
+        "allowDestructuring": false, // 禁止 `const { props, state } = this`
+        "allowedNames": ["self"] // 允许 `const self = this`
+      }
+    ],
     "import/no-unresolved": ["error", { "ignore": [".css$", ".scss$", ".sass$", ".less$"] }],
     "prettier/prettier": [
       "error",
