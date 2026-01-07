@@ -79,7 +79,7 @@ const creatingInitMessage = async () => {
     statue: 'loading',
   };
   const newMessageId = await messageStore.createMessage(createdData);
-  await messageScrollTobotton();
+  await messageScrollToBottom();
   if (conversation.value) {
     //const provider = await db.providers.where({ id: conversation.value?.providerId }).first();
     const provider = providerStore.getProviderById(conversation.value.providerId);
@@ -97,7 +97,7 @@ const creatingInitMessage = async () => {
 };
 
 //filteredMessages.value = messages.filter((item) => item.conversationId === conversationId.value);
-const messageScrollTobotton = async () => {
+const messageScrollToBottom = async () => {
   await nextTick();
   if (messageListRef.value) {
     messageListRef.value.ref.scrollIntoView({ block: 'end', behavior: 'smooth' });
@@ -110,12 +110,13 @@ watch(
     conversationId.value = Number(newVal);
 
     await messageStore.fetchMessagesbyConversationId(conversationId.value);
-    await messageScrollTobotton();
+    await messageScrollToBottom();
   }
 );
 onMounted(async () => {
+  let streamContent = '';
   await messageStore.fetchMessagesbyConversationId(conversationId.value);
-  await messageScrollTobotton();
+  await messageScrollToBottom();
   if (initMessageId) {
     await creatingInitMessage();
   }
@@ -124,13 +125,20 @@ onMounted(async () => {
     const newHeight = messageListRef.value?.ref.clientHeight;
     if (newHeight && newHeight > currentMessageListHeight) {
       currentMessageListHeight = newHeight;
-      await messageScrollTobotton();
+      await messageScrollToBottom();
     }
   };
   window.electronAPI.onUpdateMessage(async (streamData) => {
     //console.log(streamData);
-    //const { messageId, data } = streamData;
-    messageStore.updateMessage(streamData);
+    const { messageId, data } = streamData;
+    streamContent += data.delta;
+    const updateData: Omit<MessageProps, 'id' | 'createdAt' | 'conversationId'> = {
+      type: 'answer',
+      content: streamContent,
+      updatedAt: new Date().toISOString(),
+      statue: data.isFinished ? 'finished' : 'streaming',
+    };
+    await messageStore.updateMessage(messageId, updateData);
     await nextTick();
     await checkAndScrollToBottom();
   });
