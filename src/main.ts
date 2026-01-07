@@ -2,8 +2,7 @@ import { app, BrowserWindow, ipcMain, net, protocol } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { CreateChatProps, UpdateStreamData } from './types';
-import { BaiduOpenAI } from './services/baidu';
-import { QwenOpenAI } from './services/qwen';
+import { createProvider } from './providers/createProvider';
 import url from 'node:url';
 import { convertMessages } from './helper';
 import fs from 'fs/promises';
@@ -59,10 +58,25 @@ const createWindow = async () => {
   });
   //
   ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
-    console.log(args);
+    //console.log(args);
     const { providerName, messages, selectedModel, messageId } = args;
-    const convertedMessages = await convertMessages(messages);
+    const provider = createProvider(providerName);
+    const stream = await provider.chat(messages, selectedModel, false);
+    for await (const chunk of stream) {
+      //console.log(JSON.stringify(chunk));
+      const returnData: UpdateStreamData = {
+        messageId,
+        data: {
+          isFinished: chunk.isFinished,
+          delta: chunk.delta,
+        },
+      };
+      mainWindow.webContents.send('update-message', returnData);
+    }
+
+    /*
     let stream: any = null;
+  
     if (providerName === 'ernie') {
       stream = null;
       const ernie = new BaiduOpenAI();
@@ -107,6 +121,8 @@ const createWindow = async () => {
     } else {
       //为空
     }
+
+    */
   });
 
   // and load the index.html of the app.

@@ -1,8 +1,7 @@
 import { ChatMessageProps, ChatCompletionChunk } from '../types';
 import { BaseProvider } from './BaseProvider';
-import { convertMessages } from '../helper';
 import OpenAI from 'openai';
-export class OpenAIProvider extends BaseProvider {
+export class ErnieProvider extends BaseProvider {
   private openai: OpenAI;
   constructor(apiKey: string, baseURL: string) {
     super();
@@ -12,10 +11,9 @@ export class OpenAIProvider extends BaseProvider {
     });
   }
   async chat(sendMessages: ChatMessageProps[], selectedModel: string, thinking: boolean) {
-    const converMessages = await convertMessages(sendMessages);
     const params: OpenAI.ChatCompletionCreateParamsStreaming = {
       model: selectedModel,
-      messages: converMessages as any,
+      messages: sendMessages as any,
       stream: true,
     };
 
