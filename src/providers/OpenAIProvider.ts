@@ -25,7 +25,7 @@ export class OpenAIProvider extends BaseProvider {
     }
 
     const stream = await this.openai.chat.completions.create(params);
-    console.log('\n' + '='.repeat(20) + '思考过程' + '='.repeat(20));
+    console.log('\n' + '='.repeat(20) + 'qwen思考过程' + '='.repeat(20));
     const self = this;
     return {
       async *[Symbol.asyncIterator]() {

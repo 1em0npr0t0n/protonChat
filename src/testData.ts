@@ -4,7 +4,7 @@ export const providers: ProviderProps[] = [
     id: 3,
     name: 'ernie',
     title: '文心一言',
-    desc: '文心一言是一个基于大模型的智能问答系统，由字节跳动开发。',
+    desc: '百度自研的旗舰级超大规模⼤语⾔模型',
     models: ['ernie-speed-128k'],
     createdAt: '2023-08-01',
     updatedAt: '2023-08-01',
@@ -14,11 +14,22 @@ export const providers: ProviderProps[] = [
     id: 4,
     name: 'qwen',
     title: '通义千问',
-    desc: '通义千问是一个基于大模型的智能问答系统，由字节跳动开发。',
+    desc: '通义千问',
     models: ['qwen-plus', 'qwen3-vl-plus', 'qwen-long'],
     createdAt: '2023-08-01',
     updatedAt: '2023-08-01',
-    avatar: 'https://www.baidu.com/favicon.ico',
+    avatar:
+      'https://img.alicdn.com/imgextra/i1/O1CN01TLEHbS1cyufo87FKI_!!6000000003670-55-tps-32-32.svg',
+  },
+  {
+    id: 5,
+    name: 'deepseek',
+    title: '深度求索',
+    desc: '探索未至之境',
+    models: ['deepseek-chat', 'deepseek-reasoner'],
+    createdAt: '2023-08-01',
+    updatedAt: '2023-08-01',
+    avatar: 'https://cdn.deepseek.com/platform/favicon.png',
   },
 ];
 export const messages: MessageProps[] = [

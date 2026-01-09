@@ -1,7 +1,8 @@
-import { ChatMessageProps, ChatCompletionChunk } from '../types';
-import { BaseProvider } from './BaseProvider';
 import OpenAI from 'openai';
-export class ErnieProvider extends BaseProvider {
+import { ChatCompletionChunk, ChatMessageProps } from '../types';
+import { BaseProvider } from './BaseProvider';
+
+export class DpProvider extends BaseProvider {
   private openai: OpenAI;
   constructor(apiKey: string, baseURL: string) {
     super();
@@ -10,20 +11,15 @@ export class ErnieProvider extends BaseProvider {
       baseURL,
     });
   }
-  async chat(sendMessages: ChatMessageProps[], selectedModel: string, thinking: boolean) {
+  async chat(messages: ChatMessageProps[], modelName: string) {
     const params: OpenAI.ChatCompletionCreateParamsStreaming = {
-      model: selectedModel,
-      messages: sendMessages as any,
+      model: modelName,
+      messages: messages as any,
       stream: true,
     };
 
-    // 如果 enable_thinking 是自定义参数
-    if (thinking) {
-      (params as any).enable_thinking = thinking;
-    }
-
     const stream = await this.openai.chat.completions.create(params);
-    console.log('\n' + '='.repeat(20) + 'ernie思考过程' + '='.repeat(20));
+    console.log('\n' + '='.repeat(20) + 'deepseek思考过程' + '='.repeat(20));
     const self = this;
     return {
       async *[Symbol.asyncIterator]() {
