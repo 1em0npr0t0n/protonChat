@@ -60,3 +60,10 @@ export type OnUpdateMessage = (data: UpdateStreamData) => void;
 export interface MessageListInstance {
   ref: HTMLDivElement;
 }
+
+// 应用配置
+export interface AppSettings {
+  id: number;
+  language: string; // 当前语言，如 'zh-CN', 'en-US'
+  fontSize: number; // 字体大小，单位 px
+}

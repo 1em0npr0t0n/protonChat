@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between h-screen">
+  <div class="flex items-center justify-between h-screen" :style="{ fontSize: fontSize + 'px' }">
     <div class="bg-gray-200 w-[300px] h-full border-r border-gray-300">
       <div class="h-[90%] overflow-y-auto">
         <ConversationList :items="conversations" />
@@ -30,11 +30,16 @@ import CustomButton from './components/CustomButton.vue';
 import { onMounted, computed } from 'vue';
 //import { ConversationProps } from './types';
 import { useConversationStore } from './stores/conversationStore';
+import { useSettingsStore } from './stores/settingsStore';
 //const conversationsFromDB = ref<ConversationProps[]>([]);
 const conversationStore = useConversationStore();
+const settingsStore = useSettingsStore();
 const conversations = computed(() => conversationStore.conversations);
+const fontSize = computed(() => settingsStore.currentFontSize);
+
 onMounted(async () => {
   await initProviders();
+  await settingsStore.initSettings();
   //conversationStore.conversations = await db.conversations.toArray();
   conversationStore.fetchConversations();
   console.log('conversations', conversations.value);

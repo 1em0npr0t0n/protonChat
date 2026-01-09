@@ -56,6 +56,34 @@ const createWindow = async () => {
     await fs.writeFile(destPath, buffer);
     return destPath;
   });
+
+  // 配置文件操作
+  const getSettingsPath = () => {
+    const UserDataPath = app.getPath('userData');
+    return path.join(UserDataPath, 'settings.json');
+  };
+
+  // 读取配置
+  ipcMain.handle('read-settings', async () => {
+    const settingsPath = getSettingsPath();
+    try {
+      const data = await fs.readFile(settingsPath, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      // 文件不存在，返回默认配置
+      return { language: 'zh-CN', fontSize: 14 };
+    }
+  });
+
+  // 写入配置
+  ipcMain.handle(
+    'write-settings',
+    async (_event, settings: { language: string; fontSize: number }) => {
+      const settingsPath = getSettingsPath();
+      await fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), 'utf-8');
+      return true;
+    }
+  );
   //
   ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
     //console.log(args);
