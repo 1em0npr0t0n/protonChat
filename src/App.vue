@@ -7,12 +7,12 @@
       <div class="h-[10%] flex justify-between items-center p-2 gap-2">
         <RouterLink to="/">
           <CustomButton color="cyan" size="medium" :icon="'radix-icons:chat-bubble'">
-            新建聊天
+            {{ $t('common.newChat') }}
           </CustomButton>
         </RouterLink>
         <RouterLink to="/setting">
           <CustomButton color="cyan" plain size="medium" :icon="'radix-icons:gear'">
-            应用设置
+            {{ $t('common.appSettings') }}
           </CustomButton>
         </RouterLink>
       </div>

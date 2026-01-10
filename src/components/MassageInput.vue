@@ -23,7 +23,7 @@
         v-model="message"
         class="rounded-md p-1 flex-1 pl-[28px]"
         type="text"
-        placeholder="聊点什么呢？"
+        :placeholder="$t('input.placeholder')"
         :disabled="disabled"
       />
 
@@ -42,7 +42,7 @@
         :disabled="disabled"
         @click="onCreate"
       >
-        发送
+        {{ $t('common.send') }}
       </CustomButton>
     </div>
   </div>

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { AppSettings } from '../types';
+import { setLocale, SupportedLocale } from '../i18n';
 
 export interface SettingsStore {
   settings: Omit<AppSettings, 'id'> | null;
@@ -22,11 +23,20 @@ export const useSettingsStore = defineStore('settings', {
       try {
         const settings = await window.electronAPI.readSettings();
         this.settings = settings;
+        // 初始化时同步 i18n 语言
+        if (
+          settings?.language &&
+          (settings.language === 'zh-CN' || settings.language === 'en-US')
+        ) {
+          setLocale(settings.language as SupportedLocale);
+        }
       } catch (error) {
         console.error('读取配置失败:', error);
         this.settings = DEFAULT_SETTINGS;
         // 保存默认配置
         await window.electronAPI.writeSettings(DEFAULT_SETTINGS);
+        // 初始化默认语言
+        setLocale('zh-CN');
       }
     },
     // 获取设置
@@ -34,6 +44,13 @@ export const useSettingsStore = defineStore('settings', {
       try {
         const settings = await window.electronAPI.readSettings();
         this.settings = settings;
+        // 同步 i18n 语言
+        if (
+          settings?.language &&
+          (settings.language === 'zh-CN' || settings.language === 'en-US')
+        ) {
+          setLocale(settings.language as SupportedLocale);
+        }
       } catch (error) {
         console.error('读取配置失败:', error);
         if (!this.settings) {
@@ -51,6 +68,10 @@ export const useSettingsStore = defineStore('settings', {
         try {
           await window.electronAPI.writeSettings(updated);
           this.settings = updated;
+          // 如果更新了语言，同步到 i18n
+          if (updates.language && (updates.language === 'zh-CN' || updates.language === 'en-US')) {
+            setLocale(updates.language as SupportedLocale);
+          }
         } catch (error) {
           console.error('保存配置失败:', error);
         }
