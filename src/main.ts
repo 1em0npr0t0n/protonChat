@@ -4,8 +4,14 @@ import started from 'electron-squirrel-startup';
 import { CreateChatProps, UpdateStreamData } from './types';
 import { createProvider } from './providers/createProvider';
 import url from 'node:url';
-import { convertMessages } from './helper';
 import fs from 'fs/promises';
+import {
+  readSettings,
+  writeSettings,
+  initConfig,
+  refreshConfig,
+  getProvidersConfigs,
+} from './config';
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -57,52 +63,56 @@ const createWindow = async () => {
     return destPath;
   });
 
-  // 配置文件操作
-  const getSettingsPath = () => {
-    const UserDataPath = app.getPath('userData');
-    return path.join(UserDataPath, 'settings.json');
-  };
-
   // 读取配置
   ipcMain.handle('read-settings', async () => {
-    const settingsPath = getSettingsPath();
-    try {
-      const data = await fs.readFile(settingsPath, 'utf-8');
-      return JSON.parse(data);
-    } catch (error) {
-      // 文件不存在，返回默认配置
-      return { language: 'zh-CN', fontSize: 14 };
-    }
+    return await readSettings();
   });
 
   // 写入配置
-  ipcMain.handle(
-    'write-settings',
-    async (_event, settings: { language: string; fontSize: number }) => {
-      const settingsPath = getSettingsPath();
-      await fs.writeFile(settingsPath, JSON.stringify(settings, null, 2), 'utf-8');
-      return true;
-    }
-  );
+  ipcMain.handle('write-settings', async (_event, settings) => {
+    await writeSettings(settings);
+    // 配置更新后刷新配置缓存
+    await refreshConfig();
+    return true;
+  });
+
+  // 获取提供者配置
+  ipcMain.handle('get-providers-configs', async () => {
+    return await getProvidersConfigs();
+  });
   //
   ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
     //console.log(args);
     const { providerName, messages, selectedModel, messageId } = args;
-    const provider = createProvider(providerName);
-    const stream = await provider.chat(messages, selectedModel, false);
-    for await (const chunk of stream) {
-      //console.log(JSON.stringify(chunk));
-      const returnData: UpdateStreamData = {
+    try {
+      // 在创建提供者之前刷新配置，确保使用最新配置
+      await refreshConfig();
+      const provider = await createProvider(providerName);
+      const stream = await provider.chat(messages, selectedModel, false);
+      for await (const chunk of stream) {
+        //console.log(JSON.stringify(chunk));
+        const returnData: UpdateStreamData = {
+          messageId,
+          data: {
+            isFinished: chunk.isFinished,
+            delta: chunk.delta,
+          },
+        };
+        mainWindow.webContents.send('update-message', returnData);
+      }
+    } catch (error) {
+      console.error('启动聊天失败:', error);
+      mainWindow.webContents.send('update-message', {
         messageId,
         data: {
-          isFinished: chunk.isFinished,
-          delta: chunk.delta,
+          isFinished: false,
+          delta: error instanceof Error ? error.message : '与ai对话失败',
+          isError: true,
         },
-      };
-      mainWindow.webContents.send('update-message', returnData);
+      });
     }
-
-    /*
+  });
+  /*
     let stream: any = null;
   
     if (providerName === 'ernie') {
@@ -151,7 +161,6 @@ const createWindow = async () => {
     }
 
     */
-  });
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -167,7 +176,11 @@ const createWindow = async () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async () => {
+  // 初始化配置
+  await initConfig();
+  await createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

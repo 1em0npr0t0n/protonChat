@@ -10,6 +10,7 @@ export default {
   },
   settings: {
     title: '应用设置',
+    general: '常规设置',
     language: {
       title: '语言设置',
       currentLanguage: '当前语言：',
@@ -21,6 +22,21 @@ export default {
       title: '字体大小',
       label: '字体大小：',
       preview: '这是字体大小预览效果。当前字体大小为 {size}px。',
+    },
+    modelApi: {
+      title: '模型 API 配置',
+      tabLabel: '模型信息',
+      apiKey: 'API Key',
+      baseURL: 'Base URL',
+      apiKeyPlaceholder: '请输入 API Key',
+      baseURLPlaceholder: '请输入 Base URL',
+      save: '保存',
+      saved: '已保存',
+      providers: {
+        qwen: '通义千问',
+        ernie: '文心一言',
+        deepseek: '深度求索',
+      },
     },
   },
   input: {

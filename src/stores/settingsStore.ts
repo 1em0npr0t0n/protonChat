@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { AppSettings } from '../types';
+import { AppSettings, ModelApiConfig } from '../types';
 import { setLocale, SupportedLocale } from '../i18n';
 
 export interface SettingsStore {
@@ -85,9 +85,39 @@ export const useSettingsStore = defineStore('settings', {
     async setFontSize(fontSize: number) {
       await this.updateSettings({ fontSize });
     },
+    // 更新或添加模型 API 配置
+    async updateModelApiConfig(config: ModelApiConfig) {
+      if (!this.settings) {
+        await this.initSettings();
+      }
+      if (this.settings) {
+        const configs = this.settings.modelApiConfigs || [];
+        const existingIndex = configs.findIndex((c) => c.providerName === config.providerName);
+        if (existingIndex >= 0) {
+          configs[existingIndex] = config;
+        } else {
+          configs.push(config);
+        }
+        await this.updateSettings({ modelApiConfigs: configs });
+      }
+    },
+    // 删除模型 API 配置
+    async removeModelApiConfig(providerName: string) {
+      if (!this.settings) {
+        return;
+      }
+      const configs = this.settings.modelApiConfigs || [];
+      const filtered = configs.filter((c) => c.providerName !== providerName);
+      await this.updateSettings({ modelApiConfigs: filtered });
+    },
   },
   getters: {
     currentLanguage: (state) => state.settings?.language || 'zh-CN',
     currentFontSize: (state) => state.settings?.fontSize || 14,
+    // 获取所有模型 API 配置
+    getModelApiConfigs: (state) => state.settings?.modelApiConfigs || [],
+    // 获取单个模型 API 配置
+    getModelApiConfig: (state) => (providerName: string) =>
+      state.settings?.modelApiConfigs?.find((config) => config.providerName === providerName),
   },
 });

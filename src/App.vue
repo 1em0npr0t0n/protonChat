@@ -27,20 +27,28 @@
 import { initProviders } from './db/db';
 import ConversationList from './components/ConversationList.vue';
 import CustomButton from './components/CustomButton.vue';
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 //import { ConversationProps } from './types';
 import { useConversationStore } from './stores/conversationStore';
-import { useSettingsStore } from './stores/settingsStore';
-//const conversationsFromDB = ref<ConversationProps[]>([]);
+import { setLocale } from './i18n';
+
 const conversationStore = useConversationStore();
-const settingsStore = useSettingsStore();
 const conversations = computed(() => conversationStore.conversations);
-const fontSize = computed(() => settingsStore.currentFontSize);
+const fontSize = ref(14);
 
 onMounted(async () => {
   await initProviders();
-  await settingsStore.initSettings();
-  //conversationStore.conversations = await db.conversations.toArray();
+  // 初始化设置并读取字体大小
+  try {
+    const settings = await window.electronAPI.readSettings();
+    fontSize.value = settings.fontSize || 14;
+    // 同步 i18n 语言
+    if (settings.language && (settings.language === 'zh-CN' || settings.language === 'en-US')) {
+      setLocale(settings.language);
+    }
+  } catch (error) {
+    console.error('读取设置失败:', error);
+  }
   conversationStore.fetchConversations();
   console.log('conversations', conversations.value);
 });

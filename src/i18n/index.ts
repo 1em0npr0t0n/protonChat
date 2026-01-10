@@ -12,7 +12,7 @@ const messages = {
 // 获取默认语言（初始值，后续会从 Electron settings 中读取并更新）
 const getDefaultLocale = (): SupportedLocale => {
   // 根据浏览器语言自动选择默认值
-  // 实际语言会在 settingsStore.initSettings() 中从 Electron settings.json 读取并更新
+  // 实际语言会在应用启动时从 Electron settings.json 读取并更新
   const browserLang = navigator.language;
   if (browserLang.startsWith('zh')) {
     return 'zh-CN';
@@ -28,7 +28,7 @@ export const i18n = createI18n({
 });
 
 // 导出设置语言的函数
-// 语言设置会通过 settingsStore 保存到 Electron settings.json 中
+// 语言设置会通过 IPC 调用保存到 Electron settings.json 中
 export const setLocale = (locale: SupportedLocale) => {
   i18n.global.locale.value = locale;
 };

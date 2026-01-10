@@ -1,7 +1,7 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 import { contextBridge, ipcRenderer } from 'electron';
-import { CreateChatProps, OnUpdateMessage } from './types';
+import { CreateChatProps, OnUpdateMessage, AppSettings, ModelApiConfig } from './types';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   startChat: (data: CreateChatProps) => ipcRenderer.send('start-chat', data),
@@ -9,9 +9,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('update-message', (_event, data) => callback(data)),
   copyImageToUserDir: (fileName: string, base64Data: string) =>
     ipcRenderer.invoke('copy-image-to-user-dir', fileName, base64Data),
-  readSettings: () => ipcRenderer.invoke('read-settings'),
-  writeSettings: (settings: { language: string; fontSize: number }) =>
-    ipcRenderer.invoke('write-settings', settings),
+  readSettings: () => ipcRenderer.invoke('read-settings') as Promise<Omit<AppSettings, 'id'>>,
+  writeSettings: (settings: Omit<AppSettings, 'id'>) =>
+    ipcRenderer.invoke('write-settings', settings) as Promise<boolean>,
+  getProvidersConfigs: () =>
+    ipcRenderer.invoke('get-providers-configs') as Promise<Record<string, ModelApiConfig>>,
 });
 /**
  * //解开

@@ -19,7 +19,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { MessageProps, ChatMessageProps, MessageListInstance } from '../types';
+import { MessageProps, ChatMessageProps, MessageListInstance, ChatCompletionChunk } from '../types';
 import MessageList from '../components/MessageList.vue';
 import MassageInput from '../components/MassageInput.vue';
 import { ref, watch, onMounted, computed, nextTick } from 'vue';
@@ -34,7 +34,7 @@ const providerStore = useProviderStore();
 const filteredMessages = computed(() => messageStore.messages);
 const sendMessages = computed(() =>
   filteredMessages.value
-    .filter((item) => item.statue !== 'loading')
+    .filter((item) => item.statue !== 'loading' && item.statue !== 'error')
     .map((message): ChatMessageProps => {
       return {
         role: message.type === 'question' ? 'user' : 'assistant',
@@ -132,11 +132,20 @@ onMounted(async () => {
     //console.log(streamData);
     const { messageId, data } = streamData;
     streamContent += data.delta;
+    const statue = (data: ChatCompletionChunk) => {
+      if (data.isFinished) {
+        return 'finished';
+      } else if (data.isError) {
+        return 'error';
+      } else {
+        return 'streaming';
+      }
+    };
     const updateData: Omit<MessageProps, 'id' | 'createdAt' | 'conversationId'> = {
       type: 'answer',
       content: streamContent,
       updatedAt: new Date().toISOString(),
-      statue: data.isFinished ? 'finished' : 'streaming',
+      statue: statue(data),
     };
     await messageStore.updateMessage(messageId, updateData);
     await nextTick();

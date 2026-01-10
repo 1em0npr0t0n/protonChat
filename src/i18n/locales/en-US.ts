@@ -10,6 +10,7 @@ export default {
   },
   settings: {
     title: 'App Settings',
+    general: 'General',
     language: {
       title: 'Language Settings',
       currentLanguage: 'Current Language:',
@@ -21,6 +22,21 @@ export default {
       title: 'Font Size',
       label: 'Font Size:',
       preview: 'This is a font size preview. Current font size is {size}px.',
+    },
+    modelApi: {
+      title: 'Model API Configuration',
+      tabLabel: 'Model Info',
+      apiKey: 'API Key',
+      baseURL: 'Base URL',
+      apiKeyPlaceholder: 'Please enter API Key',
+      baseURLPlaceholder: 'Please enter Base URL',
+      save: 'Save',
+      saved: 'Saved',
+      providers: {
+        qwen: 'Qwen',
+        ernie: 'Ernie',
+        deepseek: 'DeepSeek',
+      },
     },
   },
   input: {

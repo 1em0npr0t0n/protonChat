@@ -1,4 +1,4 @@
-import { CreateChatProps, OnUpdateMessage, AppSettings } from './types';
+import { CreateChatProps, OnUpdateMessage, AppSettings, ModelApiConfig } from './types';
 
 export interface IElectronAPI {
   startChat: (data: CreateChatProps) => void;
@@ -6,6 +6,7 @@ export interface IElectronAPI {
   copyImageToUserDir: (fileName: string, base64Data: string) => Promise<string>;
   readSettings: () => Promise<Omit<AppSettings, 'id'>>;
   writeSettings: (settings: Omit<AppSettings, 'id'>) => Promise<boolean>;
+  getProvidersConfigs: () => Promise<Record<string, ModelApiConfig>>;
 }
 declare global {
   interface Window {

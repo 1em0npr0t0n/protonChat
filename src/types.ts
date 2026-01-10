@@ -16,7 +16,7 @@ export interface ProviderProps {
   updatedAt: string;
   models: string[];
 }
-export type MessageStatus = 'loading' | 'streaming' | 'finished';
+export type MessageStatus = 'loading' | 'streaming' | 'finished' | 'error';
 export interface MessageProps {
   id: number;
   content: string;
@@ -50,6 +50,7 @@ export interface CreateChatProps {
 export interface ChatCompletionChunk {
   isFinished: boolean;
   delta: string;
+  isError?: boolean;
 }
 export interface UpdateStreamData {
   messageId: number;
@@ -61,9 +62,17 @@ export interface MessageListInstance {
   ref: HTMLDivElement;
 }
 
+// 模型 API 配置
+export interface ModelApiConfig {
+  providerName: string; // 提供者名称，如 'qwen', 'ernie', 'deepseek'
+  apiKey: string; // API 密钥
+  baseURL: string; // API 基础 URL
+}
+
 // 应用配置
 export interface AppSettings {
   id: number;
   language: string; // 当前语言，如 'zh-CN', 'en-US'
   fontSize: number; // 字体大小，单位 px
+  modelApiConfigs?: ModelApiConfig[]; // 模型 API 配置列表
 }

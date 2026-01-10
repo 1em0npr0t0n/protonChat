@@ -2,23 +2,33 @@ import { BaseProvider } from './BaseProvider';
 import { OpenAIProvider } from './OpenAIProvider';
 import { ErnieProvider } from './ErnieProvider';
 import { DpProvider } from './DpProvider';
-import 'dotenv/config';
-export function createProvider(providerName: string): BaseProvider {
+import { getProvidersConfigs } from '../config';
+
+export async function createProvider(providerName: string): Promise<BaseProvider> {
+  const modelApiConfig = await getProvidersConfigs();
+  if (!modelApiConfig[providerName]) {
+    throw new Error(`Model API config for ${providerName} not found`);
+  }
+
+  if (!modelApiConfig[providerName].apiKey || !modelApiConfig[providerName].baseURL) {
+    throw new Error(`Model API config for ${providerName} is incomplete`);
+  }
+  console.log('modelApiConfig', modelApiConfig);
   switch (providerName) {
     case 'qwen':
       return new OpenAIProvider(
-        process.env.ALI_API_KEY as string,
-        process.env.ALI_API_URL as string
+        modelApiConfig[providerName].apiKey,
+        modelApiConfig[providerName].baseURL
       );
     case 'ernie':
       return new ErnieProvider(
-        process.env.BAIDU_API_KEY as string,
-        process.env.BAIDU_API_URL as string
+        modelApiConfig[providerName].apiKey,
+        modelApiConfig[providerName].baseURL
       );
     case 'deepseek':
       return new DpProvider(
-        process.env.DEEPSEEK_API_KEY as string,
-        process.env.DEEPSEEK_API_URL as string
+        modelApiConfig[providerName].apiKey,
+        modelApiConfig[providerName].baseURL
       );
     default:
       throw new Error(`Provider ${providerName} not found`);

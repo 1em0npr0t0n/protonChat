@@ -24,9 +24,16 @@
           <div
             v-if="message.type === 'answer'"
             class="message-content bg-gray-200 text-gray-800 p-2 rounded-lg"
+            :class="{
+              'bg-red-200 text-red-800': message.statue === 'error',
+              'bg-gray-200 text-gray-800': message.statue !== 'error',
+            }"
           >
             <template v-if="message.statue === 'loading'">
               <Icon icon="eos-icons:three-dots-loading" />
+            </template>
+            <template v-else-if="message.statue === 'error'">
+              <span>{{ message.content }}</span>
             </template>
             <div
               v-else
