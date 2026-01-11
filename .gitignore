@@ -23,6 +23,11 @@ lib-cov
 coverage
 *.lcov
 
+# electron-builder
+.electron-builder/
+scripts/publish-github.js
+scripts/
+
 # vscode
 .vscode/
 

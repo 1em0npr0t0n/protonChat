@@ -1,12 +1,11 @@
-import { app, BrowserWindow, net, protocol, dialog } from 'electron';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+import { app, BrowserWindow, net, protocol } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import url from 'node:url';
 import { initConfig, readSettings } from './config';
 import { createAppMenu } from './menu/appMenu';
 import { registerIpcHandlers } from './ipc';
+import { setupAutoUpdater } from './updater';
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -87,7 +86,7 @@ app.on('ready', async () => {
 
   // 配置自动更新（仅在打包后启用）
   if (app.isPackaged) {
-    setupAutoUpdater();
+    setupAutoUpdater(mainWindow);
   }
 });
 
@@ -107,72 +106,6 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-// 自动更新配置
-function setupAutoUpdater() {
-  // 配置自动更新日志
-  autoUpdater.logger = log;
-
-  // 检查更新（延迟3秒，等窗口完全加载）
-  setTimeout(() => {
-    autoUpdater.checkForUpdatesAndNotify().catch((err) => {
-      console.error('检查更新失败:', err);
-    });
-  }, 3000);
-
-  // 更新可用
-  autoUpdater.on('update-available', (info) => {
-    console.log('发现新版本:', info.version);
-    if (mainWindow) {
-      dialog
-        .showMessageBox(mainWindow, {
-          type: 'info',
-          title: '发现更新',
-          message: `发现新版本 ${info.version}，正在后台下载...`,
-          buttons: ['确定'],
-        })
-        .catch((err) => console.error('显示更新对话框失败:', err));
-    }
-  });
-
-  // 更新不可用
-  autoUpdater.on('update-not-available', (info) => {
-    console.log('当前已是最新版本:', info.version);
-  });
-
-  // 更新下载进度
-  autoUpdater.on('download-progress', (progressObj) => {
-    const message = `下载速度: ${progressObj.bytesPerSecond} - 已下载 ${progressObj.percent.toFixed(2)}% (${progressObj.transferred}/${progressObj.total})`;
-    console.log(message);
-  });
-
-  // 更新下载完成
-  autoUpdater.on('update-downloaded', () => {
-    console.log('更新下载完成');
-    if (mainWindow) {
-      dialog
-        .showMessageBox(mainWindow, {
-          type: 'info',
-          title: '更新就绪',
-          message: '更新已下载完成，将在退出后自动安装。是否立即重启应用？',
-          buttons: ['立即重启', '稍后'],
-          defaultId: 0,
-          cancelId: 1,
-        })
-        .then((result) => {
-          if (result.response === 0) {
-            autoUpdater.quitAndInstall(false, true);
-          }
-        })
-        .catch((err) => console.error('显示更新对话框失败:', err));
-    }
-  });
-
-  // 更新错误
-  autoUpdater.on('error', (err) => {
-    console.error('自动更新错误:', err);
-  });
-}
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
