@@ -69,7 +69,7 @@ onMounted(async () => {
       // 再删除对话
       await conversationStore.deleteConversation(conversationId);
       // 如果删除的是当前查看的对话，导航到首页
-      if (router.currentRoute.value.params.id === String(conversationId)) {
+      if (Number(router.currentRoute.value.params.id) === conversationId) {
         router.push('/');
       }
     } catch (error) {

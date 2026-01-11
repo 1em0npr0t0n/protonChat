@@ -1,5 +1,5 @@
 export interface ConversationProps {
-  id: string;
+  id: number;
   title: string;
   selectedModel: string;
   createdAt: string;
@@ -26,6 +26,7 @@ export interface MessageProps {
   createdAt: string;
   updatedAt: string;
   imagePath?: string;
+  filePath?: string;
 }
 export type ChatMessageImageContent = {
   type: string;
@@ -35,9 +36,10 @@ export type ChatMessageImageContent = {
   };
 };
 export interface ChatMessageProps {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string | ChatMessageImageContent[];
   imagePath?: string;
+  filePath?: string;
 }
 
 export interface CreateChatProps {

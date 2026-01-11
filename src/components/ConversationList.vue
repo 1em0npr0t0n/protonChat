@@ -5,13 +5,12 @@
       :key="item.id"
       class="item border-gray-400 border-t cursor-pointer p-2"
       :class="{
-        'bg-gray-300 hover:bg-gray-100':
-          conversationStore.selectedConversationId === Number(item.id),
-        'bg-white hover:bg-gray-100': conversationStore.selectedConversationId !== Number(item.id),
+        'bg-gray-300 hover:bg-gray-100': conversationStore.selectedConversationId === item.id,
+        'bg-white hover:bg-gray-100': conversationStore.selectedConversationId !== item.id,
       }"
-      @contextmenu.prevent="handleContextMenu($event, parseInt(item.id))"
+      @contextmenu.prevent="handleContextMenu($event, item.id)"
     >
-      <a :to="'/conversation/' + item.id" @click="goToConversation(parseInt(item.id))">
+      <a :to="'/conversation/' + item.id" @click="goToConversation(item.id)">
         <div class="flex justify-between items-center text-sm leading-6 text-gray-500">
           <span class="text-xs text-gray-400">{{ item.selectedModel }}</span
           ><span class="text-xs text-gray-400">{{

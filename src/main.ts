@@ -37,6 +37,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
+    title: 'Proton Chat',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -64,6 +65,16 @@ const createWindow = async () => {
     await fs.mkdir(imagesDir, { recursive: true });
     //const fileName = path.basename(sourcePath);
     const destPath = path.join(imagesDir, fileName);
+    const buffer = Buffer.from(base64Data, 'base64');
+    await fs.writeFile(destPath, buffer);
+    return destPath;
+  });
+
+  ipcMain.handle('copy-file-to-user-dir', async (_event, fileName: string, base64Data: string) => {
+    const UserDataPath = app.getPath('userData');
+    const filesDir = path.join(UserDataPath, 'files');
+    await fs.mkdir(filesDir, { recursive: true });
+    const destPath = path.join(filesDir, fileName);
     const buffer = Buffer.from(base64Data, 'base64');
     await fs.writeFile(destPath, buffer);
     return destPath;
@@ -106,7 +117,7 @@ const createWindow = async () => {
 
   //
   ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
-    //console.log(args);
+    console.log('args:', JSON.stringify(args));
     const { providerName, messages, selectedModel, messageId } = args;
     if (!mainWindow) return;
     try {
@@ -193,9 +204,10 @@ const createWindow = async () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (!app.isPackaged) {
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  }
 
   // 创建应用菜单
   await createAppMenu(mainWindow);

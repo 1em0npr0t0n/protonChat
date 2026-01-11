@@ -164,7 +164,7 @@ export const messages: MessageProps[] = [
 ];
 export const conversations: ConversationProps[] = [
   {
-    id: '1',
+    id: 1,
     title: 'conversation 1',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -172,7 +172,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '2',
+    id: 2,
     title: 'conversation 2',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -180,7 +180,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '3',
+    id: 3,
     title: 'conversation 3',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -188,7 +188,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '4',
+    id: 4,
     title: 'conversation 4 无法找到正确答案，请补充问题资料，我进行二次查询',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -196,7 +196,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '5',
+    id: 5,
     title: 'conversation 5',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -204,7 +204,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '6',
+    id: 6,
     title: 'conversation 6',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -212,7 +212,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '7',
+    id: 7,
     title: 'conversation 7',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -220,7 +220,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '8',
+    id: 8,
     title: 'conversation 8',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -228,7 +228,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '9',
+    id: 9,
     title: 'conversation 9',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -236,7 +236,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '10',
+    id: 10,
     title: 'conversation 10',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -244,7 +244,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '11',
+    id: 11,
     title: 'conversation 11',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -252,7 +252,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '12',
+    id: 12,
     title: 'conversation 12',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -260,7 +260,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '13',
+    id: 13,
     title: 'conversation 13',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',
@@ -268,7 +268,7 @@ export const conversations: ConversationProps[] = [
     providerId: 1,
   },
   {
-    id: '14',
+    id: 14,
     title: 'conversation 14',
     selectedModel: 'GPT-3.5-turbo',
     createdAt: '2023-08-01',

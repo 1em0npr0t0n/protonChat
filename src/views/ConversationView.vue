@@ -40,6 +40,7 @@ const sendMessages = computed(() =>
         role: message.type === 'question' ? 'user' : 'assistant',
         content: message.content,
         ...(message.imagePath ? { imagePath: message.imagePath } : {}),
+        ...(message.filePath ? { filePath: message.filePath } : {}),
       };
     })
 );
@@ -51,7 +52,7 @@ let conversationId = ref(Number(route.params.id as string));
 //let lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value));
 const initMessageId = Number(route.query.init as string);
 const conversation = computed(() => conversationStore.getConversationById(conversationId.value));
-const sendNewMessage = async (question: string, imagePath?: string) => {
+const sendNewMessage = async (question: string, imagePath?: string, filePath?: string) => {
   console.log('wai sendNewMessage uestion', question);
   if (question) {
     const currentDate = new Date().toISOString();
@@ -63,6 +64,7 @@ const sendNewMessage = async (question: string, imagePath?: string) => {
       createdAt: currentDate,
       updatedAt: currentDate,
       ...(imagePath ? { imagePath: imagePath } : {}),
+      ...(filePath ? { filePath: filePath } : {}),
     });
     console.log('nei _newMessageId', _newMessageId);
     inputValue.value = '';

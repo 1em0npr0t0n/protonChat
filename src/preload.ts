@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('update-message', (_event, data) => callback(data)),
   copyImageToUserDir: (fileName: string, base64Data: string) =>
     ipcRenderer.invoke('copy-image-to-user-dir', fileName, base64Data),
+  copyFileToUserDir: (fileName: string, base64Data: string) =>
+    ipcRenderer.invoke('copy-file-to-user-dir', fileName, base64Data),
   readSettings: () => ipcRenderer.invoke('read-settings') as Promise<Omit<AppSettings, 'id'>>,
   writeSettings: (settings: Omit<AppSettings, 'id'>) =>
     ipcRenderer.invoke('write-settings', settings) as Promise<boolean>,

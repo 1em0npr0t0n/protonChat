@@ -1,11 +1,11 @@
-import { ChatMessageProps, CreateChatProps, ChatMessageImageContent } from './types';
+import { ChatMessageProps, ChatMessageImageContent } from './types';
 import fs from 'fs/promises';
 import { lookup } from 'mime-types';
 export async function convertMessages(messages: ChatMessageProps[]): Promise<ChatMessageProps[]> {
   const convertedMessages: ChatMessageProps[] = [];
   for (const message of messages) {
     let convertedContent: ChatMessageImageContent[] | string;
-    const { imagePath, ...messageWithoutImagePath } = message;
+    const { imagePath, filePath, ...messageWithoutPaths } = message;
     if (imagePath) {
       const imageBuffer = await fs.readFile(imagePath);
       const base64Image = imageBuffer.toString('base64');
@@ -28,8 +28,10 @@ export async function convertMessages(messages: ChatMessageProps[]): Promise<Cha
       convertedContent = message.content;
     }
     convertedMessages.push({
-      ...messageWithoutImagePath,
+      ...messageWithoutPaths,
       content: convertedContent,
+      // 保留 filePath 信息，供后续处理
+      ...(filePath ? { filePath } : {}),
     });
   }
   return convertedMessages;
