@@ -37,9 +37,9 @@
             </template>
             <div
               v-else
-              class="prose prose-zinc prose-headings:my-2 prose-li:my-1 prose-ul:my-1 prose-p:my-1
-                prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:max-w-full
-                prose-hr:my-5"
+              class="prose prose-zinc max-w-none prose-headings:my-2 prose-li:my-1 prose-ul:my-1
+                prose-p:my-1 prose-pre:whitespace-pre-wrap prose-pre:break-words
+                prose-pre:max-w-full prose-hr:my-5"
             >
               <VueMarkdown :source="message.content" :plugins="plugins" />
             </div>

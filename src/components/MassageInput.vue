@@ -1,12 +1,12 @@
 <template>
   <div class="w-full border border-gray-300 py-1 px-1 rounded-md">
-    <div v-if="imagePreview" class="mb-2 relative flex items-center">
+    <div v-if="imagePreview" class="m-2 relative flex items-center">
       <img :src="imagePreview" alt="Preview" class="w-24 h-24 object-cover rounded-md" />
     </div>
     <div v-if="selectedFileName" class="mb-2 relative flex items-center">
       <span class="text-sm text-gray-600">{{ selectedFileName }}</span>
     </div>
-    <div class="flex items-center relative w-full">
+    <div class="flex items-center relative w-full h-[40px]">
       <input
         ref="imageInput"
         type="file"
@@ -18,22 +18,22 @@
       <Icon
         icon="ant-design:file-image-outlined"
         class="absolute left-0 ml-1 cursor-pointer"
-        width="24"
-        height="24"
+        width="32"
+        height="32"
         :class="[disabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 cursor-pointer']"
         @click="triggerImageInput"
       />
       <Icon
         icon="ant-design:file-add-outlined"
-        class="absolute left-0 ml-[28px] cursor-pointer"
-        width="24"
-        height="24"
+        class="absolute left-0 ml-8 cursor-pointer"
+        width="32"
+        height="32"
         :class="[disabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 cursor-pointer']"
         @click="triggerFileInput"
       />
       <input
         v-model="message"
-        class="rounded-md p-1 flex-1 pl-[56px]"
+        class="rounded-md p-1 flex-1 pl-[66px]"
         type="text"
         :placeholder="$t('input.placeholder')"
         :disabled="disabled"
@@ -47,7 +47,7 @@
       发送
     </button> -->
       <CustomButton
-        class="absolute right-0 mr-1"
+        class="absolute right-2"
         color="cyan"
         size="small"
         :icon="'radix-icons:paper-plane'"
