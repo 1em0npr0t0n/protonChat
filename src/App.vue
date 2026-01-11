@@ -1,5 +1,8 @@
 <template>
-  <div class="flex items-center justify-between h-screen" :style="{ fontSize: fontSize + 'px' }">
+  <div
+    class="flex items-center justify-between h-screen overflow-hidden"
+    :style="{ fontSize: fontSize + 'px' }"
+  >
     <div class="bg-gray-200 w-[300px] h-full border-r border-gray-300">
       <div class="h-[90%] overflow-y-auto">
         <ConversationList :items="conversations" />

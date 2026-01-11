@@ -1,21 +1,27 @@
 <template>
-  <div
-    v-if="conversation"
-    class="h-[10%] border-b bg-gray-200 border-gray-300 flex items-center justify-between px-[2%]"
-  >
-    <h3 class="text-sm font-bold underline inline-block">{{ conversation.title }}</h3>
-    <span class="text-sm text-gray-500">{{ conversation.selectedModel }}</span>
-  </div>
-  <div ref="messageListContainerRef" class="w-[80%] h-[75%] mt-[5px] mx-auto overflow-y-auto">
-    <MessageList ref="messageListRef" :messages="filteredMessages" />
-  </div>
-  <div class="w-[80%] h-[15%] flex justify-between items-center mx-auto">
-    <MassageInput
-      v-model="inputValue"
-      class="w-full"
-      :disabled="messageStore.isMessageLoading()"
-      @create="sendNewMessage"
-    />
+  <div class="h-full flex flex-col">
+    <div
+      v-if="conversation"
+      class="flex-shrink-0 border-b bg-gray-200 border-gray-300 flex items-center justify-between
+        px-[2%] min-h-[50px] max-h-[10%]"
+    >
+      <h3 class="text-sm font-bold underline inline-block">{{ conversation.title }}</h3>
+      <span class="text-sm text-gray-500">{{ conversation.selectedModel }}</span>
+    </div>
+    <div
+      ref="messageListContainerRef"
+      class="flex-1 w-full mt-[5px] mx-auto px-[5%] overflow-y-auto"
+    >
+      <MessageList ref="messageListRef" :messages="filteredMessages" />
+    </div>
+    <div class="flex-shrink-0 w-[80%] mx-auto py-2 overflow-y-auto min-h-[80px] max-h-[30%]">
+      <MassageInput
+        v-model="inputValue"
+        class="w-full"
+        :disabled="messageStore.isMessageLoading()"
+        @create="sendNewMessage"
+      />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
