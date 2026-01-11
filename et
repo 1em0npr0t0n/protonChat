@@ -1,0 +1,253 @@
+[33mcommit 89c7b77710d96f91fc0e6cb29ce09e941d68734f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 11 23:34:50 2026 +0800
+
+    fix: update info
+
+[33mcommit 43e144705cdb90eb87567bffbc5b594e2ce225d5[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 11 23:33:48 2026 +0800
+
+    feat:自动更新
+
+[33mcommit 51b7cd9f520a3c71b3ec0b093b445712c486cc9c[m[33m ([m[1;31morigin2/master[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 11 20:37:49 2026 +0800
+
+    chore: 抽离ipc
+
+[33mcommit 43abbde6402fc7615c470e834ab062c80d0f1529[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 11 20:35:34 2026 +0800
+
+    feat: qwen long file 支持
+
+[33mcommit 7a5d7176d05b4cf0846a4fdb2e9234da87e4e90e[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 11 10:04:56 2026 +0800
+
+    feat: 上下文菜单
+
+[33mcommit 9011904a7bd175cdeb448ffa31cf964cb2517efb[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 11 09:44:00 2026 +0800
+
+    feat: new top menu
+
+[33mcommit e94b70c0d8165731fd6e3bcd3fe6061491ad7ae2[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sat Jan 10 18:14:29 2026 +0800
+
+    feat: print error to view
+
+[33mcommit 71b37af8847ec209d443a020f746d10d3e476349[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sat Jan 10 15:38:18 2026 +0800
+
+    feat: i18n国家化 en cn
+
+[33mcommit 844d4b54d8d46a284757ae4c9c28d147ea0f080c[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Fri Jan 9 18:19:40 2026 +0800
+
+    feat: setting edit
+
+[33mcommit 5c1a90b2776cac325b7b560ce9c6b46313a4ddde[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Fri Jan 9 15:04:45 2026 +0800
+
+    feat: deepseek and sp reasoner
+
+[33mcommit 827dc986e87be2ea716e2ca90919000b4b637b07[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Wed Jan 7 20:20:23 2026 +0800
+
+    feat: 改为抽象类支持
+
+[33mcommit e21b7097ba92b3d6f92d2b7d5995aef1c4d0285b[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Wed Jan 7 19:51:30 2026 +0800
+
+    feat: abstract provider
+
+[33mcommit ead95ab02e1538232c96c34accfbaeb78e83d270[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Wed Jan 7 15:41:54 2026 +0800
+
+    fix: updateMessage 逻辑
+
+[33mcommit 46e3deb7bb7caa75de8ebf35f290dfbe214de8e2[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Jan 6 22:19:02 2026 +0800
+
+    fix: messageInput clear
+
+[33mcommit 151bb64c47e221aee4b98e06002000ba37a9a910[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Jan 6 22:16:37 2026 +0800
+
+    feat: conversation image context
+
+[33mcommit 63529b7685027912761e703cd0e51b2c270814cd[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Jan 6 22:03:16 2026 +0800
+
+    fix: lookup
+
+[33mcommit 1556fc1d9618f52ab65824f2f4e7abc05c788692[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Jan 6 20:04:51 2026 +0800
+
+    feat:  messageList image display
+
+[33mcommit 8ecf7c99b823e178d112963456f9ad0da7e6a19c[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Jan 6 18:32:21 2026 +0800
+
+    feat:  image ai
+
+[33mcommit 35a3fd52691bc42995e1c9a64c1868cd0309068e[m
+Merge: cb6fb2c feda75b
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Mon Jan 5 17:44:44 2026 +0800
+
+    Merge branch 'master' of https://gitee.com/pr0t0n/proton-chat
+    忘记滚动pull了，现在合并
+
+[33mcommit cb6fb2c3fc88059f6cec74e4da5f75222c0638eb[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Mon Jan 5 17:43:33 2026 +0800
+
+    feat: new upload image
+
+[33mcommit feda75b751f439cacd000d4bdda933c96754d537[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Mon Jan 5 02:04:45 2026 +0800
+
+    style: scrollintroView
+
+[33mcommit 764c284f1cbcb5838ab7ffb3e6cd8291369817f5[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 4 16:23:42 2026 +0800
+
+    feat: markdown tailwind prose
+
+[33mcommit 042dfa3bdd2de150576f37f88f5f8a72e8fb8cda[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 4 11:59:43 2026 +0800
+
+    feat: providerStore
+
+[33mcommit 1415f3b9515d83df0b51750210da36cac5662e57[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sun Jan 4 00:12:45 2026 +0800
+
+    feat: massageInput disabled
+
+[33mcommit 894bed00837a5d7e49eaf4b6d2870203a7ab9c7c[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sat Jan 3 02:07:33 2026 +0800
+
+    fix:多轮对话
+
+[33mcommit 4a85c8e59b09d17e16ce7b464b8fa407f6f9c0c0[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sat Jan 3 00:28:50 2026 +0800
+
+    feat: stores
+
+[33mcommit d9fe028452069f05da710b9e1fa74361f0788508[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Fri Jan 2 01:02:04 2026 +0800
+
+    feat: pinia action getter
+
+[33mcommit 1c25591eb46f8003c65b3f0b2c83ecd9a0008a79[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Thu Jan 1 23:44:07 2026 +0800
+
+    feat: 主进程 渲染进程 互通，问题建立
+
+[33mcommit 466bfed9c3b467990f340b361dc432a7c42b677b[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Thu Jan 1 17:17:07 2026 +0800
+
+    feat: onupdatemessage
+
+[33mcommit 43a1bc1f246295e8101e1d652664e80a8a309a1f[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Thu Jan 1 01:28:30 2026 +0800
+
+    fix:eslin error
+
+[33mcommit fef106e51db5a1bfe2cf8bdebbd569b7a87f8e8e[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Thu Jan 1 00:51:26 2026 +0800
+
+    preload
+
+[33mcommit b694010f17a2f28ad92b292750c7a10ce4b45525[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Wed Dec 31 17:40:45 2025 +0800
+
+    feat: indexedDB
+
+[33mcommit 142987ea33316b65cc8b1a20bbe2923a5a3f6b89[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Dec 30 23:25:55 2025 +0800
+
+    feat: chatFile
+
+[33mcommit e91936dddf2e06c78a4b1c7a5364ded3c7df774d[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Dec 30 20:21:49 2025 +0800
+
+    feat: openai baidu qwen
+
+[33mcommit e65d1056c7cace0c34e34f5ce43cbe346b9d7015[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Dec 30 00:36:19 2025 +0800
+
+    feat: route
+
+[33mcommit ff177b686725ca7290f7baae8d7fcf367452ea5c[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Mon Dec 29 23:50:29 2025 +0800
+
+    feat: massageInput.vue
+
+[33mcommit d4d7550cdae103731f11ca4fffa4d115c8515c7e[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Sat Dec 27 00:26:06 2025 +0800
+
+    feat:massage input
+
+[33mcommit e716b75848002d147fcabe6c90fca3107cd4e6c6[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Fri Dec 26 22:43:19 2025 +0800
+
+    feat: 下拉框
+
+[33mcommit 0c09e9bf0d23d79cfb055209546ee4e26d9ca3f4[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Fri Dec 26 17:04:42 2025 +0800
+
+    feat: 首页
+
+[33mcommit 1abf352450fce0231994aad87c3f848109388b83[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Dec 23 23:14:41 2025 +0800
+
+    complete
+
+[33mcommit 505e83c2802680a636334c7bbfa0cab42cf85bcc[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Dec 23 22:18:35 2025 +0800
+
+    feat: vue ts
+
+[33mcommit 685499a0c78057031b5a36c03f417e29daf7366a[m
+Author: 一点都不馋 <loseappetite@gmail.com>
+Date:   Tue Dec 23 21:37:46 2025 +0800
+
+    init: proton

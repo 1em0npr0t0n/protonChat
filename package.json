@@ -6,14 +6,77 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
+    "package": "cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ electron-forge package",
+    "make": "cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "publish:github": "cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ HTTP_PROXY=http://127.0.0.1:10809 HTTPS_PROXY=http://127.0.0.1:10809 npm run package && node scripts/publish-github.js",
+    "lint": "eslint --ext .ts,.tsx .",
+    "build": "cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ HTTP_PROXY=http://127.0.0.1:10809 HTTPS_PROXY=http://127.0.0.1:10809 npm run package && cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ HTTP_PROXY=http://127.0.0.1:10809 HTTPS_PROXY=http://127.0.0.1:10809 electron-builder",
+    "build:win": "cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ HTTP_PROXY=http://127.0.0.1:10809 HTTPS_PROXY=http://127.0.0.1:10809 npm run package && cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ HTTP_PROXY=http://127.0.0.1:10809 HTTPS_PROXY=http://127.0.0.1:10809 electron-builder --win",
+    "dist": "cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ HTTP_PROXY=http://127.0.0.1:10809 HTTPS_PROXY=http://127.0.0.1:10809 npm run package && cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ HTTP_PROXY=http://127.0.0.1:10809 HTTPS_PROXY=http://127.0.0.1:10809 electron-builder"
   },
   "keywords": [],
   "author": "一点都不馋",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1em0npr0t0n/protonChat.git"
+  },
+  "build": {
+    "appId": "com.protonchat.app",
+    "productName": "Proton Chat",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      ".vite/build/**/*",
+      ".vite/renderer/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraFiles": [
+      {
+        "from": "src/public",
+        "to": "resources",
+        "filter": [
+          "*.ico",
+          "*.png",
+          "*.jpg"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "src/public/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "installerIcon": "src/public/icon3.ico",
+      "uninstallerIcon": "src/public/icon3.ico",
+      "installerHeaderIcon": "src/public/icon3.ico",
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Proton Chat",
+      "displayLanguageSelector": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "1em0npr0t0n",
+        "repo": "protonChat"
+      }
+    ]
+  },
   "devDependencies": {
     "@electron-forge/cli": "^7.10.2",
     "@electron-forge/maker-deb": "^7.10.2",
@@ -31,7 +94,10 @@
     "@typescript-eslint/parser": "^5.62.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.23",
+    "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
     "electron": "39.2.7",
+    "electron-builder": "^26.4.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -50,7 +116,9 @@
     "dayjs": "^1.11.19",
     "dexie": "^4.2.1",
     "dotenv": "^17.2.3",
+    "electron-log": "^5.4.3",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.7.3",
     "highlight.js": "^11.11.1",
     "markdown-it-highlightjs": "^4.2.0",
     "mime-types": "^3.0.2",

@@ -6,17 +6,35 @@ import { MakerRpm } from '@electron-forge/maker-rpm';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import path from 'path';
 
 const config: ForgeConfig = {
   packagerConfig: {
+    name: 'Proton Chat',
+    icon: path.resolve(__dirname, 'src/public/icon.ico'),
     asar: true,
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({}),
+    new MakerSquirrel({
+      // 安装程序图标
+      setupIcon: path.resolve(__dirname, 'src/public/icon3.ico'),
+      // 安装程序文件名
+      setupExe: 'Proton Chat Setup.exe',
+      // 不生成 MSI 安装包（只生成 EXE 安装程序）
+      noMsi: true,
+      // 应用程序包 ID（不能包含空格，必须是有效的 NuGet 包 ID）
+      name: 'ProtonChat',
+      // 作者信息（可选）
+      authors: '一点都不馋',
+      // 应用程序描述（可选）
+      description: 'Proton Chat - 一款功能强大的聊天应用程序',
+      // 加载动画 GIF（可选，如果不想使用默认动画，可以添加自定义 GIF）
+      // loadingGif: path.resolve(__dirname, 'src/public/loading.gif'),
+    }),
     new MakerZIP({}, ['darwin']),
-    new MakerRpm({}),
-    new MakerDeb({}),
+    // new MakerRpm({}),
+    // new MakerDeb({}),
   ],
   plugins: [
     new VitePlugin({
