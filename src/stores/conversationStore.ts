@@ -24,6 +24,19 @@ export const useConversationStore = defineStore('conversation', {
       this.conversations.push({ id: String(newId), ...createData });
       return newId;
     },
+    async deleteConversation(conversationId: number) {
+      // 从数据库删除对话
+      // 注意：虽然类型定义中 id 是 string，但数据库 schema 使用 '++id'，实际主键是 number
+      // 所以需要使用类型断言来绕过类型检查
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await db.conversations as any).delete(conversationId);
+      // 从状态中删除对话
+      this.conversations = this.conversations.filter((item) => Number(item.id) !== conversationId);
+      // 如果删除的是当前选中的对话，重置选中状态
+      if (this.selectedConversationId === conversationId) {
+        this.selectedConversationId = -1;
+      }
+    },
   },
   getters: {
     totalNumber: (state) => state.conversations.length,

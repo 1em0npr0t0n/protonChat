@@ -8,6 +8,8 @@ export interface IElectronAPI {
   writeSettings: (settings: Omit<AppSettings, 'id'>) => Promise<boolean>;
   getProvidersConfigs: () => Promise<Record<string, ModelApiConfig>>;
   onNavigate: (callback: (path: string) => void) => any;
+  showConversationContextMenu: (conversationId: number, x?: number, y?: number) => void;
+  onDeleteConversation: (callback: (conversationId: number) => void) => any;
 }
 declare global {
   interface Window {

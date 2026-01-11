@@ -30,11 +30,13 @@ import CustomButton from './components/CustomButton.vue';
 import { onMounted, computed, ref } from 'vue';
 //import { ConversationProps } from './types';
 import { useConversationStore } from './stores/conversationStore';
+import { useMessageStore } from './stores/messageStore';
 import { setLocale } from './i18n';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const conversationStore = useConversationStore();
+const messageStore = useMessageStore();
 const conversations = computed(() => conversationStore.conversations);
 const fontSize = ref(14);
 
@@ -57,6 +59,22 @@ onMounted(async () => {
   // 监听菜单导航消息
   window.electronAPI.onNavigate((path: string) => {
     router.push(path);
+  });
+
+  // 监听删除对话事件
+  window.electronAPI.onDeleteConversation(async (conversationId: number) => {
+    try {
+      // 先删除该对话的所有消息
+      await messageStore.deleteMessagesByConversationId(conversationId);
+      // 再删除对话
+      await conversationStore.deleteConversation(conversationId);
+      // 如果删除的是当前查看的对话，导航到首页
+      if (router.currentRoute.value.params.id === String(conversationId)) {
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('删除对话失败:', error);
+    }
   });
 });
 

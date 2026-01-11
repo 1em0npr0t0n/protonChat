@@ -18,6 +18,7 @@ export default {
     hide: '隐藏',
     hideOthers: '隐藏其他',
     showAll: '显示全部',
+    deleteConversation: '删除对话',
   },
   settings: {
     title: '应用设置',

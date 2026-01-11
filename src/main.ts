@@ -13,6 +13,7 @@ import {
   getProvidersConfigs,
 } from './config';
 import { createAppMenu } from './menu/appMenu';
+import { showConversationContextMenu } from './menu/contextMenu';
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -92,10 +93,22 @@ const createWindow = async () => {
   ipcMain.handle('get-providers-configs', async () => {
     return await getProvidersConfigs();
   });
+
+  // 显示对话上下文菜单
+  ipcMain.on(
+    'show-conversation-context-menu',
+    async (_event, conversationId: number, x?: number, y?: number) => {
+      if (mainWindow) {
+        await showConversationContextMenu(conversationId, mainWindow, x, y);
+      }
+    }
+  );
+
   //
   ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
     //console.log(args);
     const { providerName, messages, selectedModel, messageId } = args;
+    if (!mainWindow) return;
     try {
       // 在创建提供者之前刷新配置，确保使用最新配置
       await refreshConfig();

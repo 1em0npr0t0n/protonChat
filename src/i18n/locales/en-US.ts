@@ -18,6 +18,7 @@ export default {
     hide: 'Hide',
     hideOthers: 'Hide Others',
     showAll: 'Show All',
+    deleteConversation: 'Delete Conversation',
   },
   settings: {
     title: 'App Settings',

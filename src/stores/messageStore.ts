@@ -45,6 +45,12 @@ export const useMessageStore = defineStore('message', {
       }
       //}
     },
+    async deleteMessagesByConversationId(conversationId: number) {
+      // 从数据库删除指定对话的所有消息
+      await db.messages.where({ conversationId }).delete();
+      // 从状态中删除相关消息
+      this.messages = this.messages.filter((item) => item.conversationId !== conversationId);
+    },
   },
   getters: {
     getLastQuestion: (state) => (conversationId: number) => {

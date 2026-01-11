@@ -14,6 +14,7 @@ type MenuTranslations = {
   hide: string;
   hideOthers: string;
   showAll: string;
+  deleteConversation: string;
 };
 
 const translations: Record<SupportedLocale, MenuTranslations> = {
@@ -27,6 +28,7 @@ const translations: Record<SupportedLocale, MenuTranslations> = {
     hide: zhCN.menu.hide,
     hideOthers: zhCN.menu.hideOthers,
     showAll: zhCN.menu.showAll,
+    deleteConversation: zhCN.menu.deleteConversation,
   },
   'en-US': {
     action: enUS.menu.action,
@@ -38,6 +40,7 @@ const translations: Record<SupportedLocale, MenuTranslations> = {
     hide: enUS.menu.hide,
     hideOthers: enUS.menu.hideOthers,
     showAll: enUS.menu.showAll,
+    deleteConversation: enUS.menu.deleteConversation,
   },
 };
 

@@ -16,6 +16,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('get-providers-configs') as Promise<Record<string, ModelApiConfig>>,
   onNavigate: (callback: (path: string) => void) =>
     ipcRenderer.on('navigate', (_event, path: string) => callback(path)),
+  showConversationContextMenu: (conversationId: number, x?: number, y?: number) =>
+    ipcRenderer.send('show-conversation-context-menu', conversationId, x, y),
+  onDeleteConversation: (callback: (conversationId: number) => void) =>
+    ipcRenderer.on('delete-conversation', (_event, conversationId: number) =>
+      callback(conversationId)
+    ),
 });
 /**
  * //解开

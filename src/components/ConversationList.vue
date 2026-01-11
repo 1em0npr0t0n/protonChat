@@ -9,6 +9,7 @@
           conversationStore.selectedConversationId === Number(item.id),
         'bg-white hover:bg-gray-100': conversationStore.selectedConversationId !== Number(item.id),
       }"
+      @contextmenu.prevent="handleContextMenu($event, parseInt(item.id))"
     >
       <a :to="'/conversation/' + item.id" @click="goToConversation(parseInt(item.id))">
         <div class="flex justify-between items-center text-sm leading-6 text-gray-500">
@@ -28,14 +29,22 @@
 import dayjs from 'dayjs';
 import { useConversationStore } from '../stores/conversationStore';
 import { ConversationProps } from '../types';
+import { useRouter } from 'vue-router';
+
 defineProps<{
   items: ConversationProps[];
 }>();
-import { useRouter } from 'vue-router';
+
 const router = useRouter();
 const conversationStore = useConversationStore();
+
 const goToConversation = (id: number) => {
   router.push(`/conversation/${id}`);
   conversationStore.selectedConversationId = id;
+};
+
+const handleContextMenu = (event: MouseEvent, conversationId: number) => {
+  event.preventDefault();
+  window.electronAPI.showConversationContextMenu(conversationId, event.clientX, event.clientY);
 };
 </script>
