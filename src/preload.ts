@@ -14,6 +14,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('write-settings', settings) as Promise<boolean>,
   getProvidersConfigs: () =>
     ipcRenderer.invoke('get-providers-configs') as Promise<Record<string, ModelApiConfig>>,
+  onNavigate: (callback: (path: string) => void) =>
+    ipcRenderer.on('navigate', (_event, path: string) => callback(path)),
 });
 /**
  * //解开

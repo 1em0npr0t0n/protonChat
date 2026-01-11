@@ -8,6 +8,17 @@ export default {
     fontSize: '字体大小：',
     fontSizePreview: '这是字体大小预览效果。当前字体大小为 {size}px。',
   },
+  menu: {
+    action: '操作',
+    newChat: '新建聊天',
+    appSettings: '应用设置',
+    exit: '退出',
+    about: '关于',
+    services: '服务',
+    hide: '隐藏',
+    hideOthers: '隐藏其他',
+    showAll: '显示全部',
+  },
   settings: {
     title: '应用设置',
     general: '常规设置',

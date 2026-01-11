@@ -7,6 +7,7 @@ export interface IElectronAPI {
   readSettings: () => Promise<Omit<AppSettings, 'id'>>;
   writeSettings: (settings: Omit<AppSettings, 'id'>) => Promise<boolean>;
   getProvidersConfigs: () => Promise<Record<string, ModelApiConfig>>;
+  onNavigate: (callback: (path: string) => void) => any;
 }
 declare global {
   interface Window {

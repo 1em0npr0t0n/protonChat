@@ -8,6 +8,17 @@ export default {
     fontSize: 'Font Size:',
     fontSizePreview: 'This is a font size preview. Current font size is {size}px.',
   },
+  menu: {
+    action: 'Action',
+    newChat: 'New Chat',
+    appSettings: 'App Settings',
+    exit: 'Exit',
+    about: 'About',
+    services: 'Services',
+    hide: 'Hide',
+    hideOthers: 'Hide Others',
+    showAll: 'Show All',
+  },
   settings: {
     title: 'App Settings',
     general: 'General',

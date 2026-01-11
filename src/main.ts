@@ -12,6 +12,7 @@ import {
   refreshConfig,
   getProvidersConfigs,
 } from './config';
+import { createAppMenu } from './menu/appMenu';
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -26,9 +27,13 @@ if (started) {
   app.quit();
 }
 
+// 保存主窗口引用和当前语言，用于菜单刷新
+let mainWindow: BrowserWindow | null = null;
+let currentLanguage = 'zh-CN';
+
 const createWindow = async () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
     webPreferences: {
@@ -70,9 +75,16 @@ const createWindow = async () => {
 
   // 写入配置
   ipcMain.handle('write-settings', async (_event, settings) => {
+    const previousLanguage = currentLanguage;
     await writeSettings(settings);
+    // 更新当前语言
+    currentLanguage = settings.language || 'zh-CN';
     // 配置更新后刷新配置缓存
     await refreshConfig();
+    // 如果语言改变，刷新菜单
+    if (previousLanguage !== currentLanguage && mainWindow) {
+      await createAppMenu(mainWindow);
+    }
     return true;
   });
 
@@ -171,6 +183,12 @@ const createWindow = async () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  // 创建应用菜单
+  await createAppMenu(mainWindow);
+  // 初始化当前语言
+  const settings = await readSettings();
+  currentLanguage = settings.language || 'zh-CN';
 };
 
 // This method will be called when Electron has finished

@@ -31,7 +31,9 @@ import { onMounted, computed, ref } from 'vue';
 //import { ConversationProps } from './types';
 import { useConversationStore } from './stores/conversationStore';
 import { setLocale } from './i18n';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const conversationStore = useConversationStore();
 const conversations = computed(() => conversationStore.conversations);
 const fontSize = ref(14);
@@ -51,6 +53,11 @@ onMounted(async () => {
   }
   conversationStore.fetchConversations();
   console.log('conversations', conversations.value);
+
+  // 监听菜单导航消息
+  window.electronAPI.onNavigate((path: string) => {
+    router.push(path);
+  });
 });
 
 //console.log('👋 This message is being logged by "App.vue", included via Vite');
