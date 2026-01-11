@@ -1,19 +1,10 @@
-import { app, BrowserWindow, ipcMain, net, protocol } from 'electron';
+import { app, BrowserWindow, net, protocol } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { CreateChatProps, UpdateStreamData } from './types';
-import { createProvider } from './providers/createProvider';
 import url from 'node:url';
-import fs from 'fs/promises';
-import {
-  readSettings,
-  writeSettings,
-  initConfig,
-  refreshConfig,
-  getProvidersConfigs,
-} from './config';
+import { initConfig, readSettings } from './config';
 import { createAppMenu } from './menu/appMenu';
-import { showConversationContextMenu } from './menu/contextMenu';
+import { registerIpcHandlers } from './ipc';
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -30,7 +21,8 @@ if (started) {
 
 // 保存主窗口引用和当前语言，用于菜单刷新
 let mainWindow: BrowserWindow | null = null;
-let currentLanguage = 'zh-CN';
+// 使用对象引用以便在 IPC 处理器中更新
+const currentLanguage = { value: 'zh-CN' };
 
 const createWindow = async () => {
   // Create the browser window.
@@ -59,144 +51,8 @@ const createWindow = async () => {
     const newFilePath = url.pathToFileURL(filePath).toString();
     return net.fetch(newFilePath);
   });
-  ipcMain.handle('copy-image-to-user-dir', async (_event, fileName: string, base64Data: string) => {
-    const UserDataPath = app.getPath('userData');
-    const imagesDir = path.join(UserDataPath, 'images');
-    await fs.mkdir(imagesDir, { recursive: true });
-    //const fileName = path.basename(sourcePath);
-    const destPath = path.join(imagesDir, fileName);
-    const buffer = Buffer.from(base64Data, 'base64');
-    await fs.writeFile(destPath, buffer);
-    return destPath;
-  });
-
-  ipcMain.handle('copy-file-to-user-dir', async (_event, fileName: string, base64Data: string) => {
-    const UserDataPath = app.getPath('userData');
-    const filesDir = path.join(UserDataPath, 'files');
-    await fs.mkdir(filesDir, { recursive: true });
-    const destPath = path.join(filesDir, fileName);
-    const buffer = Buffer.from(base64Data, 'base64');
-    await fs.writeFile(destPath, buffer);
-    return destPath;
-  });
-
-  // 读取配置
-  ipcMain.handle('read-settings', async () => {
-    return await readSettings();
-  });
-
-  // 写入配置
-  ipcMain.handle('write-settings', async (_event, settings) => {
-    const previousLanguage = currentLanguage;
-    await writeSettings(settings);
-    // 更新当前语言
-    currentLanguage = settings.language || 'zh-CN';
-    // 配置更新后刷新配置缓存
-    await refreshConfig();
-    // 如果语言改变，刷新菜单
-    if (previousLanguage !== currentLanguage && mainWindow) {
-      await createAppMenu(mainWindow);
-    }
-    return true;
-  });
-
-  // 获取提供者配置
-  ipcMain.handle('get-providers-configs', async () => {
-    return await getProvidersConfigs();
-  });
-
-  // 显示对话上下文菜单
-  ipcMain.on(
-    'show-conversation-context-menu',
-    async (_event, conversationId: number, x?: number, y?: number) => {
-      if (mainWindow) {
-        await showConversationContextMenu(conversationId, mainWindow, x, y);
-      }
-    }
-  );
-
-  //
-  ipcMain.on('start-chat', async (_event, args: CreateChatProps) => {
-    console.log('args:', JSON.stringify(args));
-    const { providerName, messages, selectedModel, messageId } = args;
-    if (!mainWindow) return;
-    try {
-      // 在创建提供者之前刷新配置，确保使用最新配置
-      await refreshConfig();
-      const provider = await createProvider(providerName);
-      const stream = await provider.chat(messages, selectedModel, false);
-      for await (const chunk of stream) {
-        //console.log(JSON.stringify(chunk));
-        const returnData: UpdateStreamData = {
-          messageId,
-          data: {
-            isFinished: chunk.isFinished,
-            delta: chunk.delta,
-          },
-        };
-        mainWindow.webContents.send('update-message', returnData);
-      }
-    } catch (error) {
-      console.error('启动聊天失败:', error);
-      mainWindow.webContents.send('update-message', {
-        messageId,
-        data: {
-          isFinished: false,
-          delta: error instanceof Error ? error.message : '与ai对话失败',
-          isError: true,
-        },
-      });
-    }
-  });
-  /*
-    let stream: any = null;
-  
-    if (providerName === 'ernie') {
-      stream = null;
-      const ernie = new BaiduOpenAI();
-      console.log('messages', convertedMessages, 'selectedModel', selectedModel);
-      stream = await ernie.chatMessage(convertedMessages, selectedModel);
-    } else if (providerName === 'qwen') {
-      stream = null;
-      const qwen = new QwenOpenAI();
-      // switch (selectedModel) {
-      //   case 'qwen-plus':
-      //     console.log('qwen-plusmessages', messages, 'selectedModel', selectedModel);
-      //     stream = await qwen.chatMessage(messages, selectedModel);
-      //     break;
-      //   case 'qwen3-vl-plus':
-      //     console.log('qwen3-vl-plusmessages', messages, 'selectedModel', selectedModel);
-      //     break;
-      //   case 'qwen-long':
-      //     console.log('qwen-longmessages', messages, 'selectedModel', selectedModel);
-      //     break;
-      //   default:
-      //     break;
-      // }
-      stream = await qwen.chatMessage(convertedMessages, selectedModel);
-    }
-    if (stream !== null) {
-      for await (const chunk of stream) {
-        //console.log(JSON.stringify(chunk));
-        const delta = chunk.choices[0].delta.content;
-        const isFinished = chunk.choices[0].finish_reason === 'stop';
-        //携带终止信号
-        if (delta || isFinished) {
-          const returnData: UpdateStreamData = {
-            messageId,
-            data: {
-              isFinished,
-              delta: delta ?? '', // 可能为空
-            },
-          };
-          mainWindow.webContents.send('update-message', returnData);
-        }
-      }
-    } else {
-      //为空
-    }
-
-    */
+  // 注册所有 IPC 处理器
+  registerIpcHandlers(mainWindow, currentLanguage);
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -213,7 +69,7 @@ const createWindow = async () => {
   await createAppMenu(mainWindow);
   // 初始化当前语言
   const settings = await readSettings();
-  currentLanguage = settings.language || 'zh-CN';
+  currentLanguage.value = settings.language || 'zh-CN';
 };
 
 // This method will be called when Electron has finished
